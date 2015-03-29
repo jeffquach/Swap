@@ -48,7 +48,7 @@ public class TermsOfServiceActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(Void... params) {
             JSONParser jsonParser = new JSONParser();
-            String result = jsonParser.getStringUsingHttp(BuildConfig.SERVER_URL+"/post/service");
+            String result = jsonParser.getStringUsingHttp(BuildConfig.SERVER_URL+"/termsOfService");
             return result;
         }
 
