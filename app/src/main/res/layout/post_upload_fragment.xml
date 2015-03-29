@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/take_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take photo"/>
+    <Button
+        android:id="@+id/send_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send post"/>
+
+    <EditText
+        android:id="@+id/post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a title"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/post_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a description for your item"
+        android:gravity="left|top"
+        android:inputType="textMultiLine"/>
+
+    <EditText
+        android:id="@+id/post_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a city"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:id="@+id/post_photo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:scaleType="centerInside"
+        android:background="@android:color/darker_gray"
+        android:cropToPadding="true"
+        android:drawableRight="@android:drawable/ic_menu_help"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/register_bank_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register for direct payments"/>
+        <ImageButton
+            android:id="@+id/register_bank_account_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@android:drawable/ic_menu_help"
+            android:background="@null"
+            android:layout_margin="8dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/terms_of_service"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+
+</LinearLayout>
