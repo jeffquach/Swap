@@ -19,25 +19,28 @@
             android:layout_weight="1"
             android:text="Last name"/>
         </TableRow>
-   <TableRow
+   <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:orientation="vertical">
+       android:orientation="horizontal">
        <EditText
            android:id="@+id/firstName"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:autoText="true"
            android:layout_weight="1"
+           android:inputType="textCapSentences"
+           android:nextFocusDown="@+id/lastName"
            android:hint="First name"/>
        <EditText
            android:id="@+id/lastName"
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
-           android:nextFocusForward="@+id/expYear"
+           android:nextFocusDown="@+id/city"
            android:layout_weight="1"
+           android:inputType="textCapSentences"
            android:hint="Last name"/>
-       </TableRow>
+       </LinearLayout>
 
     <TableRow
         android:layout_width="match_parent"
@@ -55,25 +58,26 @@
             android:text="Postal Code"/>
     </TableRow>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
         <EditText
-            android:id="@+id/address"
+            android:id="@+id/city"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:nextFocusForward="@+id/cvc"
+            android:nextFocusDown="@+id/postalCode"
             android:layout_weight="1"
-            android:hint="Address"/>
+            android:inputType="textCapSentences"
+            android:hint="City"/>
         <EditText
             android:id="@+id/postalCode"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:nextFocusForward="@+id/save"
+            android:nextFocusDown="@+id/countrySpinner"
             android:layout_weight="1"
             android:hint="Postal Code"/>
-    </TableRow>
+    </LinearLayout>
 
     <TableRow
         android:layout_width="match_parent"
@@ -99,6 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/countries_array"
+            android:nextFocusDown="@+id/provinceSpinner"
             android:layout_weight="1"
             android:prompt="@string/country_prompt" />
         <Spinner
