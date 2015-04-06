@@ -63,6 +63,7 @@ public class PostShowFragment extends Fragment {
         mPostDescriptionView.setText("Description: "+postDescription);
         mPostUsernameView.setText("User: "+postUsername);
         mPostCityView.setText("City: "+postCity);
+
         return view;
     }
 }

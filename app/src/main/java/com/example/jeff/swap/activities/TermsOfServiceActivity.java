@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class TermsOfServiceActivity extends ActionBarActivity {
             textView.setText(Html.fromHtml(result));
             scrollView.addView(textView);
             frameLayout.addView(scrollView);
+            Log.i("ToS","$$$ Stripe ToS $$$: "+result);
         }
     }
 }

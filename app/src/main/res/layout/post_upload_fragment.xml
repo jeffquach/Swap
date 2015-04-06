@@ -68,5 +68,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/paymentTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pay tingz haters!"/>
+        <Button
+            android:id="@+id/countryShow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show my country!"/>
+        </LinearLayout>
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.jeff.swap.fragments;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.app.DialogFragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.jeff.swap.BuildConfig;
 import com.example.jeff.swap.R;
+import com.example.jeff.swap.activities.PaymentActivity;
 import com.example.jeff.swap.activities.TermsOfServiceActivity;
 
 import org.apache.http.HttpResponse;
@@ -76,11 +77,50 @@ public class PostUploadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("onCreate","$$$ onCreate called $$$");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i("onStart","$$$ onStart called $$$");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("onResume","$$$ onResume called $$$");
+        showTermsOfServiceMessage();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("onPause","$$$ onPause called $$$");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i("onStop","$$$ onStop called $$$");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i("onDestroyView","$$$ onDestroyView called $$$");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("onDestroy","$$$ onDestroy called $$$");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("onCreateView","$$$ onCreateView called $$$");
         sharedPreferences = getActivity().getSharedPreferences("Chat",0);
         View view = inflater.inflate(R.layout.post_upload_fragment,container,false);
         takePhotoButton = (Button) view.findViewById(R.id.take_photo);
@@ -136,32 +176,10 @@ public class PostUploadFragment extends Fragment {
         registerBankAccountHelp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                DialogFragment fragment = InformationDialogFragment.newInstance("By registering for direct payments you can have funds directly transferred to your bank account whenever someone buys one of your items");
+                DialogFragment fragment = InformationDialogFragment.newInstance("By registering for direct payments you can have funds directly transferred to your bank account whenever someone buys one of your items","Notice");
                 fragment.show(getActivity().getFragmentManager(), "error");
             }
         });
-        SpannableString ss = new SpannableString("By registering your account, you agree to our Terms of Service and the Stripe Connected Account Agreement.");
-        ClickableSpan span1 = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                Intent intent = new Intent(getActivity(),TermsOfServiceActivity.class);
-                startActivity(intent);
-            }
-        };
-
-        ClickableSpan span2 = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                // do another thing
-                Toast.makeText(getActivity(),"Stripe's Terms of Service yo!",Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        ss.setSpan(span1, 46, 62, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(span2, 71, 106, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        termsOfService.setText(ss);
-        termsOfService.setMovementMethod(LinkMovementMethod.getInstance());
 
         photoContainer.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -174,7 +192,50 @@ public class PostUploadFragment extends Fragment {
                 return true;
             }
         });
+
+        Button paymentTest = (Button) view.findViewById(R.id.paymentTest);
+        paymentTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                startActivity(intent);
+            }
+        });
+        Button showCountry = (Button) view.findViewById(R.id.countryShow);
+        showCountry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String country = getActivity().getResources().getConfiguration().locale.getCountry();
+                String countryName = getActivity().getResources().getConfiguration().locale.getDisplayCountry();
+                Toast.makeText(getActivity(),"Country: "+country+" , Country name: "+countryName,Toast.LENGTH_LONG).show();
+            }
+        });
         return view;
+    }
+
+    private void showTermsOfServiceMessage(){
+        SpannableString ss = new SpannableString("By registering your account, you agree to our Terms of Service and the Stripe Connected Account Agreement.");
+        ClickableSpan span1 = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                Intent intent = new Intent(getActivity(),TermsOfServiceActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        ClickableSpan span2 = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://stripe.com/connect/terms"));
+                startActivity(browserIntent);
+            }
+        };
+
+        ss.setSpan(span1, 46, 62, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(span2, 71, 106, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        termsOfService.setText(ss);
+        termsOfService.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private File createImageFile() throws IOException {
@@ -281,7 +342,9 @@ public class PostUploadFragment extends Fragment {
                 multipartEntity.addTextBody("title",post_title);
                 multipartEntity.addTextBody("description",post_description);
                 multipartEntity.addTextBody("city",post_city);
-                multipartEntity.addBinaryBody("locationOfImage", inputStream, ContentType.create("image/jpeg"), mImageFileName+".jpg");
+                if(inputStream != null){
+                    multipartEntity.addBinaryBody("locationOfImage", inputStream, ContentType.create("image/jpeg"), mImageFileName+".jpg");
+                }
                 httpPost.setEntity(multipartEntity.build());
 
                 Log.i("DIRK", "request " + httpPost.getRequestLine());

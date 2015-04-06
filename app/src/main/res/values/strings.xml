@@ -20,5 +20,12 @@
     <string name="search_hint">Search items</string>
     <string name="search">Search</string>
     <string name="clear_search">Clear search</string>
+    <string name="help">Help</string>
+    <string name="country_prompt">Select country</string>
+    <string name="province_prompt">Select province/state</string>
+    <string-array name="countries_array">
+        <item>Canada</item>
+        <item>United States</item>
+    </string-array>
 
 </resources>

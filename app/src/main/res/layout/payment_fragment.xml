@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ENTER CREDIT CARD DETAILS YO!"/>
+
+    <EditText
+        android:id="@+id/creditCardNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoText="true"
+        android:inputType="number"
+        android:hint="Credit card number"/>
+
+    <EditText
+        android:id="@+id/expMonth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:nextFocusForward="@+id/expYear"
+        android:inputType="number"
+        android:hint="Expiry month"/>
+
+    <EditText
+        android:id="@+id/expYear"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:nextFocusForward="@+id/cvc"
+        android:inputType="number"
+        android:hint="Expiry year"/>
+
+    <EditText
+        android:id="@+id/cvc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:nextFocusForward="@+id/save"
+        android:inputType="number"
+        android:hint="CVC"/>
+
+
+    <Button
+        android:id="@+id/saveCreditCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send my data"/>
+
+    <Button
+        android:id="@+id/personalDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Advance to next screen"/>
+
+</LinearLayout>

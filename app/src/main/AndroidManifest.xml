@@ -85,6 +85,13 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.jeff.swap.activities.MainActivity"/>
         </activity>
+        <activity
+            android:name="com.example.jeff.swap.activities.PaymentActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/app_name">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.jeff.swap.activities.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

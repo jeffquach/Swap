@@ -49,8 +49,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         String pattern = BuildConfig.SERVER_URL+"/image/uploads/(?!undefined)";
         Pattern patternToMatch = Pattern.compile(pattern);
         Matcher regexMatch = patternToMatch.matcher(post.getImageUrl());
-        //if (regexMatch.lookingAt()){
-        mPostViewListener.addImageToQueue(viewHolder.mPostImageView, post.getImageUrl());
+        if (regexMatch.lookingAt()){
+            mPostViewListener.addImageToQueue(viewHolder.mPostImageView, post.getImageUrl());
 //                for (int i = position+1; i < getItemCount(); i++){
 //                    Post postsAhead = mPosts.get(i);
 //                    String imageUrl = postsAhead.getImageUrl();
@@ -58,9 +58,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         //mPostImageCacheDownloaderThread.queueImageCache(post.getId(), post.getImageUrl());
 //                    }
 //                }
-//            }else{
-//                viewHolder.mPostImageView.setImageDrawable(null);
-//            }
+        }else{
+            viewHolder.mPostImageView.setImageDrawable(null);
+        }
         Log.i("regexMatcher","$$$ regexMatch.lookingAt() $$$: "+(regexMatch.lookingAt()));
         Log.i("onBindViewHolder","$$$ post.getImageUrl() $$$: "+post.getImageUrl());
         viewHolder.setTitle("Title: "+post.getTitle());
