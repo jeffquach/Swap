@@ -23,6 +23,9 @@
     <string name="help">Help</string>
     <string name="country_prompt">Select country</string>
     <string name="province_prompt">Select province/state</string>
+    <string name="dob_month_prompt">Select month</string>
+    <string name="dob_day_prompt">Select day</string>
+    <string name="dob_year_prompt">Select year</string>
     <string-array name="countries_array">
         <item>Canada</item>
         <item>United States</item>

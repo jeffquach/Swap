@@ -12,130 +12,102 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="First name" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Last name"/>
-        </TableRow>
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal">
-       <EditText
-           android:id="@+id/firstName"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:autoText="true"
-           android:layout_weight="1"
-           android:inputType="textCapSentences"
-           android:nextFocusDown="@+id/lastName"
-           android:hint="First name"/>
-       <EditText
-           android:id="@+id/lastName"
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:nextFocusDown="@+id/city"
-           android:layout_weight="1"
-           android:inputType="textCapSentences"
-           android:hint="Last name"/>
-       </LinearLayout>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="City"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Postal Code / Zip Code"/>
+            android:text="Email Address"/>
     </TableRow>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/city"
+            android:id="@+id/emailAddress"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:nextFocusDown="@+id/postalCode"
+            android:imeOptions="actionDone"
             android:layout_weight="1"
-            android:inputType="textCapSentences"
-            android:hint="City"/>
-        <EditText
-            android:id="@+id/postalCode"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNone"
-            android:layout_weight="1"
-            android:hint="Postal Code"/>
+            android:hint="Email Address"/>
     </LinearLayout>
 
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="8dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Country"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Province/State"/>
+            android:text="Date of birth"/>
     </TableRow>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Month"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Day"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Year"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <Spinner
-            android:id="@+id/countrySpinner"
+            android:id="@+id/monthSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/countries_array"
             android:nextFocusDown="@+id/provinceSpinner"
             android:layout_weight="1"
-            android:prompt="@string/country_prompt" />
+            android:prompt="@string/dob_month_prompt" />
         <Spinner
-            android:id="@+id/provinceSpinner"
+            android:id="@+id/daySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:spinnerMode="dropdown"
-            android:prompt="@string/province_prompt" />
-        </LinearLayout>
+            android:prompt="@string/dob_day_prompt" />
+        <Spinner
+            android:id="@+id/yearSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:spinnerMode="dropdown"
+            android:prompt="@string/dob_year_prompt" />
+    </LinearLayout>
+
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/personal_id_number_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Address"/>
+            android:layout_weight="1"/>
     </TableRow>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/address"
+            android:id="@+id/personal_id_number_edittext"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:layout_weight="1"
-            android:hint="Address"/>
+            android:layout_weight="1"/>
     </LinearLayout>
+
     <Button
         android:id="@+id/nextButton"
         android:layout_width="match_parent"
