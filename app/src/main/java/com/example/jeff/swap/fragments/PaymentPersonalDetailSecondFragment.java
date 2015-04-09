@@ -2,14 +2,12 @@ package com.example.jeff.swap.fragments;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.Context;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +20,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
 
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -124,7 +120,6 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
                 }
             }
         });
-
         setSpinners();
         setFormValidators();
         return view;
@@ -159,39 +154,44 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("CLICKY","$$$$ LOCALE.getDefault() YO! $$$$: "+(Locale.getDefault()));
-                String locale = getActivity().getResources().getConfiguration().locale.getCountry();
-                Log.i("CLICKY","$$$$ country YO! $$$$: "+locale);
-                String localeDisplay = getActivity().getResources().getConfiguration().locale.getDisplayCountry();
-                Log.i("CLICKY","$$$$ country DISPLAY YO! $$$$: "+localeDisplay);
-                TelephonyManager telephonyManager=(TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-                // Access Sim Country Code
-                String sim_country_code = telephonyManager.getSimCountryIso();
-                Log.i("CLICKY","$$$$ sim_country_code YO! $$$$: "+sim_country_code);
-                String errorMessage = "";
-                boolean hasErrors = false;
-                if(mEmailAddress.length() == 0){
-                    errorMessage+="Email address cannot be blank\n";
-                    hasErrors = true;
-                }
-//                if(mEmailAddress.length() > 0 && !Pattern.matches(EMAIL_REGEX, mEmailAddress.getText().toString())){
-//                    errorMessage+="Your email address is in an invalid format\n";
+//                Log.i("CLICKY","$$$$ LOCALE.getDefault() YO! $$$$: "+(Locale.getDefault()));
+//                String locale = getActivity().getResources().getConfiguration().locale.getCountry();
+//                Log.i("CLICKY","$$$$ country YO! $$$$: "+locale);
+//                String localeDisplay = getActivity().getResources().getConfiguration().locale.getDisplayCountry();
+//                Log.i("CLICKY","$$$$ country DISPLAY YO! $$$$: "+localeDisplay);
+//                TelephonyManager telephonyManager=(TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+//                // Access Sim Country Code
+//                String sim_country_code = telephonyManager.getSimCountryIso();
+//                Log.i("CLICKY","$$$$ sim_country_code YO! $$$$: "+sim_country_code);
+//                String errorMessage = "";
+//                boolean hasErrors = false;
+//                if(mEmailAddress.length() == 0){
+//                    errorMessage+="Email address cannot be blank\n";
 //                    hasErrors = true;
 //                }
-                if(mPersonalIdNumber.length() == 0){
-                    hasErrors = true;
-                    if(isCanada){
-                        errorMessage+="SIN cannot be blank\n";
-                    }else{
-                        errorMessage+="SSN cannot be blank\n";
-                    }
-                }
-                if(hasErrors){
-                    DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
-                    fragment.show(getActivity().getFragmentManager(), "error");
-                }else{
-                    Toast.makeText(getActivity(), "Everything good to go yo!", Toast.LENGTH_LONG).show();
-                }
+////                if(mEmailAddress.length() > 0 && !Pattern.matches(EMAIL_REGEX, mEmailAddress.getText().toString())){
+////                    errorMessage+="Your email address is in an invalid format\n";
+////                    hasErrors = true;
+////                }
+//                if(mPersonalIdNumber.length() == 0){
+//                    hasErrors = true;
+//                    if(isCanada){
+//                        errorMessage+="SIN cannot be blank\n";
+//                    }else{
+//                        errorMessage+="SSN cannot be blank\n";
+//                    }
+//                }
+//                if(hasErrors){
+//                    DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
+//                    fragment.show(getActivity().getFragmentManager(), "error");
+//                }else{
+                    Fragment personalDetailsThirdFragment = new PaymentPersonalDetailThirdFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragmentContainer,personalDetailsThirdFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.addToBackStack("PaymentPersonalDetailThirdFragment");
+                    ft.commit();
+                //}
             }
         });
     }
