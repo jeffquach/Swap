@@ -12,4 +12,14 @@ public class PaymentActivity extends SingleFragmentActivity {
     protected Fragment createFragment(){
         return new PaymentFragment();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 }

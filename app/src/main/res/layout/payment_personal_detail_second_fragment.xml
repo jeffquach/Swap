@@ -22,8 +22,9 @@
             android:id="@+id/emailAddress"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:layout_weight="1"
+            android:inputType="textEmailAddress"
             android:hint="Email Address"/>
     </LinearLayout>
 
@@ -67,7 +68,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/countries_array"
-            android:nextFocusDown="@+id/provinceSpinner"
             android:layout_weight="1"
             android:prompt="@string/dob_month_prompt" />
         <Spinner
@@ -104,6 +104,7 @@
             android:id="@+id/personal_id_number_edittext"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:imeOptions="actionDone"
             android:layout_weight="1"/>
     </LinearLayout>
@@ -111,6 +112,8 @@
     <Button
         android:id="@+id/nextButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Next"/>
+        android:layout_height="65dp"
+        android:text="Next"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 </TableLayout>

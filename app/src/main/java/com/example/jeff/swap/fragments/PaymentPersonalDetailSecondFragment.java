@@ -2,9 +2,13 @@ package com.example.jeff.swap.fragments;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +27,9 @@ import android.widget.Toast;
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
 
+import java.util.Locale;
+import java.util.regex.Pattern;
+
 /**
  * Created by jeff on 15-04-06.
  */
@@ -38,6 +45,11 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
     private TextView personalIdTextView;
     private EditText mPersonalIdNumber;
     private Button mNextButton;
+    private final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private final String PERSONAL_ID_NUMBER_REGEX = "\\d*";
+    private final String SIN_REGEX = "\\d{9}";
+    private final String SSN_REGEX = "\\d{4}";
+    private boolean isCanada = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +66,7 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         View view = inflater.inflate(R.layout.payment_personal_detail_second_fragment, container, false);
         PaymentActivity paymentActivity = (PaymentActivity) getActivity();
         paymentActivity.getSupportActionBar().setTitle("Payment Information");
-        mEmailAddress = (EditText) view.findViewById(R.id.firstName);
+        mEmailAddress = (EditText) view.findViewById(R.id.emailAddress);
         dob_month = (Spinner) view.findViewById(R.id.monthSpinner);
         dob_day = (Spinner) view.findViewById(R.id.daySpinner);
         dob_year = (Spinner) view.findViewById(R.id.yearSpinner);
@@ -62,14 +74,56 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         mPersonalIdNumber = (EditText) view.findViewById(R.id.personal_id_number_edittext);
         mNextButton = (Button) view.findViewById(R.id.nextButton);
 
-        Log.i("sharedPref","$$$ sharedPref -> country $$$: "+sharedPreferences.getString("country",""));
-        Log.i("sharedPref","$$$ sharedPreferences.getString(\"country\",\"\").equals(\"Canada\") $$$: "+(sharedPreferences.getString("country","").equals("Canada")));
-        Log.i("sharedPref","$$$ sharedPref -> province $$$: "+sharedPreferences.getString("province",""));
         if(sharedPreferences.getString("country","").equals("Canada")){
             personalIdTextView.setText("Social Insurance Number (SIN)");
+            isCanada = true;
         }else{
-            personalIdTextView.setText("Personal ID number / SSN last 4 digits");
+            personalIdTextView.setText("Social Security Number (SSN) last 4 digits");
         }
+
+        mEmailAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Pattern.matches(EMAIL_REGEX, mEmailAddress.getText().toString())){
+                    mEmailAddress.setError("Your email address is in an incorrect format");
+                }
+            }
+        });
+
+        mPersonalIdNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(isCanada){
+                    if(!Pattern.matches(SIN_REGEX, mPersonalIdNumber.getText().toString())){
+                        mPersonalIdNumber.setError("Your SIN must be a maximum of 9 digits");
+                    }
+                }else{
+                    if(!Pattern.matches(SSN_REGEX, mPersonalIdNumber.getText().toString())){
+                        mPersonalIdNumber.setError("Your SSN must be a maximum of 4 digits");
+                    }
+                }
+            }
+        });
 
         setSpinners();
         setFormValidators();
@@ -105,15 +159,32 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("CLICKY","$$$$ LOCALE.getDefault() YO! $$$$: "+(Locale.getDefault()));
+                String locale = getActivity().getResources().getConfiguration().locale.getCountry();
+                Log.i("CLICKY","$$$$ country YO! $$$$: "+locale);
+                String localeDisplay = getActivity().getResources().getConfiguration().locale.getDisplayCountry();
+                Log.i("CLICKY","$$$$ country DISPLAY YO! $$$$: "+localeDisplay);
+                TelephonyManager telephonyManager=(TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+                // Access Sim Country Code
+                String sim_country_code = telephonyManager.getSimCountryIso();
+                Log.i("CLICKY","$$$$ sim_country_code YO! $$$$: "+sim_country_code);
                 String errorMessage = "";
                 boolean hasErrors = false;
                 if(mEmailAddress.length() == 0){
                     errorMessage+="Email address cannot be blank\n";
                     hasErrors = true;
                 }
+//                if(mEmailAddress.length() > 0 && !Pattern.matches(EMAIL_REGEX, mEmailAddress.getText().toString())){
+//                    errorMessage+="Your email address is in an invalid format\n";
+//                    hasErrors = true;
+//                }
                 if(mPersonalIdNumber.length() == 0){
-                    errorMessage+="Last name cannot be blank\n";
                     hasErrors = true;
+                    if(isCanada){
+                        errorMessage+="SIN cannot be blank\n";
+                    }else{
+                        errorMessage+="SSN cannot be blank\n";
+                    }
                 }
                 if(hasErrors){
                     DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");

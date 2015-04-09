@@ -151,6 +151,7 @@ public class PaymentPersonalDetailFragment extends Fragment {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.fragmentContainer,personalDetailsSecondFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.addToBackStack("PaymentPersonalDetailSecondFragment");
                     ft.commit();
                 //}
             }

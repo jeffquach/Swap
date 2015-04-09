@@ -4,21 +4,22 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="First name" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Last name"/>
-        </TableRow>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="First name" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Last name"/>
+            </LinearLayout>
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -27,36 +28,35 @@
            android:id="@+id/firstName"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:autoText="true"
            android:layout_weight="1"
-           android:inputType="textCapSentences"
-           android:nextFocusDown="@+id/lastName"
+           android:inputType="textPersonName"
+           android:imeOptions="actionNext"
            android:hint="First name"/>
        <EditText
            android:id="@+id/lastName"
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
-           android:nextFocusDown="@+id/city"
+           android:imeOptions="actionNext"
            android:layout_weight="1"
-           android:inputType="textCapSentences"
+           android:inputType="textPersonName"
            android:hint="Last name"/>
        </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="City"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Postal Code / Zip Code"/>
-    </TableRow>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:id="@+id/city"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:nextFocusDown="@+id/postalCode"
+            android:imeOptions="actionNext"
             android:layout_weight="1"
             android:inputType="textCapSentences"
             android:hint="City"/>
@@ -74,26 +74,27 @@
             android:id="@+id/postalCode"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNone"
+            android:imeOptions="actionNext"
             android:layout_weight="1"
+            android:inputType="textPostalAddress"
             android:hint="Postal Code"/>
     </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Country"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Province/State"/>
-    </TableRow>
+            android:text="Province/State" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,7 +104,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/countries_array"
-            android:nextFocusDown="@+id/provinceSpinner"
             android:layout_weight="1"
             android:prompt="@string/country_prompt" />
         <Spinner
@@ -114,7 +114,7 @@
             android:spinnerMode="dropdown"
             android:prompt="@string/province_prompt" />
         </LinearLayout>
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Address"/>
-    </TableRow>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -132,13 +132,16 @@
             android:id="@+id/address"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
             android:layout_weight="1"
-            android:hint="Address"/>
+            android:hint="Address"
+            android:inputType="textPostalAddress"
+            android:imeOptions="actionDone"/>
     </LinearLayout>
     <Button
         android:id="@+id/nextButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Next"/>
+        android:layout_height="65dp"
+        android:text="Next"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 </TableLayout>
