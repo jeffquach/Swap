@@ -15,10 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.jeff.swap.R;
@@ -47,6 +50,10 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
     private final String SSN_REGEX = "\\d{4}";
     private boolean isCanada = false;
 
+    private String dobMonthString;
+    private String dobDayString;
+    private String dobYearString;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -59,8 +66,11 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.payment_personal_detail_second_fragment, container, false);
+        View view = inflater.inflate(R.layout.activity_fragment, container, false);
         PaymentActivity paymentActivity = (PaymentActivity) getActivity();
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragmentContainer);
+        TableLayout tableLayout = new TableLayout(getActivity());
+        frameLayout.addView(inflater.inflate(R.layout._payment_personal_detail_second_partial, tableLayout, true));
         paymentActivity.getSupportActionBar().setTitle("Payment Information");
         mEmailAddress = (EditText) view.findViewById(R.id.emailAddress);
         dob_month = (Spinner) view.findViewById(R.id.monthSpinner);
@@ -120,6 +130,39 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
                 }
             }
         });
+        dob_month.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dobMonthString = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        dob_day.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dobDayString = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        dob_year.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dobYearString = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         setSpinners();
         setFormValidators();
         return view;
@@ -154,44 +197,41 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.i("CLICKY","$$$$ LOCALE.getDefault() YO! $$$$: "+(Locale.getDefault()));
-//                String locale = getActivity().getResources().getConfiguration().locale.getCountry();
-//                Log.i("CLICKY","$$$$ country YO! $$$$: "+locale);
-//                String localeDisplay = getActivity().getResources().getConfiguration().locale.getDisplayCountry();
-//                Log.i("CLICKY","$$$$ country DISPLAY YO! $$$$: "+localeDisplay);
-//                TelephonyManager telephonyManager=(TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-//                // Access Sim Country Code
-//                String sim_country_code = telephonyManager.getSimCountryIso();
-//                Log.i("CLICKY","$$$$ sim_country_code YO! $$$$: "+sim_country_code);
-//                String errorMessage = "";
-//                boolean hasErrors = false;
-//                if(mEmailAddress.length() == 0){
-//                    errorMessage+="Email address cannot be blank\n";
-//                    hasErrors = true;
-//                }
-////                if(mEmailAddress.length() > 0 && !Pattern.matches(EMAIL_REGEX, mEmailAddress.getText().toString())){
-////                    errorMessage+="Your email address is in an invalid format\n";
-////                    hasErrors = true;
-////                }
-//                if(mPersonalIdNumber.length() == 0){
-//                    hasErrors = true;
-//                    if(isCanada){
-//                        errorMessage+="SIN cannot be blank\n";
-//                    }else{
-//                        errorMessage+="SSN cannot be blank\n";
-//                    }
-//                }
-//                if(hasErrors){
-//                    DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
-//                    fragment.show(getActivity().getFragmentManager(), "error");
-//                }else{
+                String errorMessage = "";
+                boolean hasErrors = false;
+                if(mEmailAddress.length() == 0){
+                    errorMessage+="Email address cannot be blank\n";
+                    hasErrors = true;
+                }
+                if(mEmailAddress.length() > 0 && !Pattern.matches(EMAIL_REGEX, mEmailAddress.getText().toString())){
+                    errorMessage+="Your email address is in an invalid format\n";
+                    hasErrors = true;
+                }
+                if(mPersonalIdNumber.length() == 0){
+                    hasErrors = true;
+                    if(isCanada){
+                        errorMessage+="SIN cannot be blank\n";
+                    }else{
+                        errorMessage+="SSN cannot be blank\n";
+                    }
+                }
+                if(hasErrors){
+                    DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
+                    fragment.show(getActivity().getFragmentManager(), "error");
+                }else{
+                    editSharedPreferences.putString("emailAddress",mEmailAddress.getText().toString());
+                    editSharedPreferences.putString("personalIdNumber",mPersonalIdNumber.getText().toString());
+                    editSharedPreferences.putString("dobMonth",dobMonthString);
+                    editSharedPreferences.putString("dobDay",dobDayString);
+                    editSharedPreferences.putString("dobYear",dobYearString);
+                    editSharedPreferences.commit();
                     Fragment personalDetailsThirdFragment = new PaymentPersonalDetailThirdFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.fragmentContainer,personalDetailsThirdFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     ft.addToBackStack("PaymentPersonalDetailThirdFragment");
                     ft.commit();
-                //}
+                }
             }
         });
     }

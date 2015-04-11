@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bankTableLayout"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +17,31 @@
         android:orientation="horizontal">
         <EditText
             android:id="@+id/bank_account_number"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:imeOptions="actionNext"
+            android:hint="Bank account number"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <TableRow
+        android:id="@+id/bankNumbersTableRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/transitNumberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+    <LinearLayout
+        android:id="@+id/bankNumbersLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/transitNumberEditText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
@@ -40,4 +63,4 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_margin="13dp" />
-</TableLayout>
+</merge>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fillViewport="true"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TableRow
         android:layout_width="match_parent"
@@ -116,4 +114,5 @@
         android:text="Next"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"/>
-</TableLayout>
+
+</merge>

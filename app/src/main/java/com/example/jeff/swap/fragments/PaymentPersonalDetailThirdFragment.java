@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -40,14 +41,14 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
     private EditText mBankAccountNumber;
     private TableRow mDynamicTableRow;
     private LinearLayout mDynamicLinearLayout;
+    private TextView mTransitNumberTextView;
+    private TextView mInstitutionNumberTextView;
     private EditText mTransitNumberEditText;
     private EditText mInstitutionNumberEditText;
     private TextView mBankAccountHelp;
     private Button mNextButton;
     private final String PERSONAL_ID_NUMBER_REGEX = "\\d*";
     private boolean isCanada = false;
-    private TableLayout mBankTableLayout;
-    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,32 +62,41 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.payment_personal_detail_third_fragment, container, false);
+        View view = inflater.inflate(R.layout.activity_fragment, container, false);
         PaymentActivity paymentActivity = (PaymentActivity) getActivity();
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragmentContainer);
+        TableLayout tableLayout = new TableLayout(getActivity());
+        frameLayout.addView(inflater.inflate(R.layout._payment_personal_detail_third_partial, tableLayout, true));
         paymentActivity.getSupportActionBar().setTitle("Banking Information");
-        mBankTableLayout = (TableLayout) view.findViewById(R.id.bankTableLayout);
         mBankAccountNumber = (EditText) view.findViewById(R.id.bank_account_number);
+        mTransitNumberTextView = (TextView) view.findViewById(R.id.transitNumberTextView);
+        mTransitNumberEditText = (EditText) view.findViewById(R.id.transitNumberEditText);
         mBankAccountHelp = (TextView) view.findViewById(R.id.bankAccountHelp);
         mNextButton = (Button) view.findViewById(R.id.sendButton);
 
         if(sharedPreferences.getString("country","").equals("Canada")){
             isCanada = true;
         }
+
         if(isCanada){
-            createDynamicXmlElements("Transit number",EditorInfo.IME_ACTION_NEXT);
-            TextView institutionNumber = new TextView(mContext);
+            mTransitNumberTextView.setText("Transit number");
+            mTransitNumberEditText.setHint("Transit number");
+            Context context = (PaymentActivity) getActivity();
+            TableRow tableRow = (TableRow) view.findViewById(R.id.bankNumbersTableRow);
+            TextView institutionNumber = new TextView(context);
             institutionNumber.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f));
             institutionNumber.setText("Institution Number");
-            mDynamicTableRow.addView(institutionNumber);
-
-            mInstitutionNumberEditText = new EditText(mContext);
+            tableRow.addView(institutionNumber);
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.bankNumbersLinearLayout);
+            mInstitutionNumberEditText = new EditText(context);
             mInstitutionNumberEditText.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
             mInstitutionNumberEditText.setHint("Institution number");
             mInstitutionNumberEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
             mInstitutionNumberEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-            mDynamicLinearLayout.addView(mInstitutionNumberEditText);
+            linearLayout.addView(mInstitutionNumberEditText);
         }else{
-            createDynamicXmlElements("Routing number",EditorInfo.IME_ACTION_DONE);
+            mTransitNumberTextView.setText("Routing number");
+            mTransitNumberEditText.setHint("Routing number");
         }
         setFormValidators();
         return view;
@@ -116,29 +126,6 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
         mBankAccountHelp.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private void createDynamicXmlElements(String textViewName, int imeOptions){
-        mContext = getActivity();
-        mDynamicTableRow = new TableRow(mContext);
-        mDynamicTableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        mDynamicTableRow.setOrientation(LinearLayout.HORIZONTAL);
-        TextView transitNumber = new TextView(mContext);
-        transitNumber.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f));
-        transitNumber.setText(textViewName);
-        mDynamicTableRow.addView(transitNumber);
-        mBankTableLayout.addView(mDynamicTableRow,2);
-
-        mDynamicLinearLayout = new LinearLayout(mContext);
-        mDynamicLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-        mDynamicLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        mTransitNumberEditText = new EditText(mContext);
-        mTransitNumberEditText.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
-        mTransitNumberEditText.setHint(textViewName);
-        mTransitNumberEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        mTransitNumberEditText.setImeOptions(imeOptions);
-        mDynamicLinearLayout.addView(mTransitNumberEditText);
-        mBankTableLayout.addView(mDynamicLinearLayout,3);
-    }
-
     private void setFormValidators(){
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +149,12 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
                     hasErrors = true;
                 }
                 if(hasErrors){
+                    editSharedPreferences.putString("bankAccountNumber",mBankAccountNumber.getText().toString());
+                    editSharedPreferences.putString("transitNumber",mTransitNumberEditText.getText().toString());
+                    if(isCanada){
+                        editSharedPreferences.putString("institutionNumber",mInstitutionNumberEditText.getText().toString());
+                    }
+                    editSharedPreferences.commit();
                     DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
                     fragment.show(getActivity().getFragmentManager(), "error");
                 }else{

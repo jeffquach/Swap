@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fillViewport="true"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="First name" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Last name"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="First name" />
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Last name"/>
-            </LinearLayout>
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal">
-       <EditText
-           android:id="@+id/firstName"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_weight="1"
-           android:inputType="textPersonName"
-           android:imeOptions="actionNext"
-           android:hint="First name"/>
-       <EditText
-           android:id="@+id/lastName"
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:imeOptions="actionNext"
-           android:layout_weight="1"
-           android:inputType="textPersonName"
-           android:hint="Last name"/>
-       </LinearLayout>
+            android:layout_weight="1"
+            android:inputType="textPersonName"
+            android:imeOptions="actionNext"
+            android:hint="First name"/>
+        <EditText
+            android:id="@+id/lastName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:layout_weight="1"
+            android:inputType="textPersonName"
+            android:hint="Last name"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,7 +110,7 @@
             android:layout_weight="1"
             android:spinnerMode="dropdown"
             android:prompt="@string/province_prompt" />
-        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,4 +141,5 @@
         android:text="Next"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp" />
-</TableLayout>
+
+</merge>

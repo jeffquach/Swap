@@ -18,7 +18,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
@@ -35,6 +37,7 @@ public class PaymentPersonalDetailFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editSharedPreferences;
 
+    private TableLayout mTableLayout;
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mCity;
@@ -57,7 +60,10 @@ public class PaymentPersonalDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.payment_personal_detail_fragment, container, false);
+        View view = inflater.inflate(R.layout.activity_fragment, container, false);
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragmentContainer);
+        TableLayout tableLayout = new TableLayout(getActivity());
+        frameLayout.addView(inflater.inflate(R.layout._payment_personal_detail_partial, tableLayout, true));
         PaymentActivity paymentActivity = (PaymentActivity) getActivity();
         paymentActivity.getSupportActionBar().setTitle("Payment Information");
         countrySpinner = (Spinner) view.findViewById(R.id.countrySpinner);
@@ -115,30 +121,30 @@ public class PaymentPersonalDetailFragment extends Fragment {
             public void onClick(View v) {
                 String errorMessage = "";
                 boolean hasErrors = false;
-//                if(mFirstName.length() == 0){
-//                    errorMessage+="First name cannot be blank\n";
-//                    hasErrors = true;
-//                }
-//                if(mLastName.length() == 0){
-//                    errorMessage+="Last name cannot be blank\n";
-//                    hasErrors = true;
-//                }
-//                if(mCity.length() == 0){
-//                    errorMessage+="City cannot be blank\n";
-//                    hasErrors = true;
-//                }
-//                if(mPostalCode.length() == 0){
-//                    errorMessage+="Postal code cannot be blank\n";
-//                    hasErrors = true;
-//                }
-//                if(mAddress.length() == 0){
-//                    errorMessage+="Address cannot be blank\n";
-//                    hasErrors = true;
-//                }
-//                if(hasErrors){
-//                    DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
-//                    fragment.show(getActivity().getFragmentManager(), "error");
-//                }else{
+                if(mFirstName.length() == 0){
+                    errorMessage+="First name cannot be blank\n";
+                    hasErrors = true;
+                }
+                if(mLastName.length() == 0){
+                    errorMessage+="Last name cannot be blank\n";
+                    hasErrors = true;
+                }
+                if(mCity.length() == 0){
+                    errorMessage+="City cannot be blank\n";
+                    hasErrors = true;
+                }
+                if(mPostalCode.length() == 0){
+                    errorMessage+="Postal code cannot be blank\n";
+                    hasErrors = true;
+                }
+                if(mAddress.length() == 0){
+                    errorMessage+="Address cannot be blank\n";
+                    hasErrors = true;
+                }
+                if(hasErrors){
+                    DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
+                    fragment.show(getActivity().getFragmentManager(), "error");
+                }else{
                     editSharedPreferences.putString("firstName",mFirstName.getText().toString());
                     editSharedPreferences.putString("lastName",mLastName.getText().toString());
                     editSharedPreferences.putString("city",mCity.getText().toString());
@@ -153,7 +159,7 @@ public class PaymentPersonalDetailFragment extends Fragment {
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     ft.addToBackStack("PaymentPersonalDetailSecondFragment");
                     ft.commit();
-                //}
+                }
             }
         });
     }
