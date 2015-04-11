@@ -164,8 +164,25 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
             }
         });
         setSpinners();
+        setInputedValues();
         setFormValidators();
         return view;
+    }
+
+    private void setInputedValues(){
+        if(!sharedPreferences.getString("emailAddress","").equals("")){
+            mEmailAddress.setText(sharedPreferences.getString("emailAddress",""));
+        }
+        if(!sharedPreferences.getString("personalIdNumber","").equals("")){
+            mPersonalIdNumber.setText(sharedPreferences.getString("personalIdNumber",""));
+        }
+    }
+
+    private void presetSpinnerValues(ArrayAdapter<Integer> adapter, Spinner spinner,String sharedPrefValue){
+        if((!sharedPreferences.getString("dobMonth","").equals(""))){
+            int setPosition = adapter.getPosition(Integer.valueOf(sharedPreferences.getString(sharedPrefValue,"")));
+            spinner.setSelection(setPosition);
+        }
     }
 
     private void setSpinners(){
@@ -176,6 +193,8 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         ArrayAdapter<Integer> dobMonthArrayAdapter = new ArrayAdapter<Integer>(getActivity(),android.R.layout.simple_spinner_item, monthValues);
         dobMonthArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         dob_month.setAdapter(dobMonthArrayAdapter);
+        presetSpinnerValues(dobMonthArrayAdapter,dob_month,"dobMonth");
+
         Integer dayValues[] = new Integer[31];
         for(int i = 0; i < 31; i++){
             dayValues[i] = Integer.valueOf(i+1);
@@ -183,6 +202,8 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         ArrayAdapter<Integer> dobDayArrayAdapter = new ArrayAdapter<Integer>(getActivity(),android.R.layout.simple_spinner_item, dayValues);
         dobDayArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         dob_day.setAdapter(dobDayArrayAdapter);
+        presetSpinnerValues(dobDayArrayAdapter,dob_day,"dobDay");
+
         Integer yearValues[] = new Integer[89];
         for(int i = 0; i < 89; i++){
             yearValues[i] = Integer.valueOf(1920+i);
@@ -191,6 +212,7 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
         dobYearArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         dob_year.setAdapter(dobYearArrayAdapter);
         dob_year.setSelection(75);
+        presetSpinnerValues(dobYearArrayAdapter,dob_year,"dobYear");
     }
 
     private void setFormValidators(){

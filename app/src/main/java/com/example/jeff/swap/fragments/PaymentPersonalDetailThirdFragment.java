@@ -1,5 +1,6 @@
 package com.example.jeff.swap.fragments;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
@@ -49,6 +50,7 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
     private Button mNextButton;
     private final String PERSONAL_ID_NUMBER_REGEX = "\\d*";
     private boolean isCanada = false;
+    private PaymentActivity paymentActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.activity_fragment, container, false);
-        PaymentActivity paymentActivity = (PaymentActivity) getActivity();
+        paymentActivity = (PaymentActivity) getActivity();
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragmentContainer);
         TableLayout tableLayout = new TableLayout(getActivity());
         frameLayout.addView(inflater.inflate(R.layout._payment_personal_detail_third_partial, tableLayout, true));
@@ -99,7 +101,21 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
             mTransitNumberEditText.setHint("Routing number");
         }
         setFormValidators();
+        paymentActivity.setOnBackPressedListener(new BaseBackPressedListener(paymentActivity));
+        preseedSharedPrefData();
         return view;
+    }
+
+    private void preseedSharedPrefData(){
+        if(!sharedPreferences.getString("bankAccountNumber","").equals("")){
+            mBankAccountNumber.setText(sharedPreferences.getString("bankAccountNumber",""));
+        }
+        if(!sharedPreferences.getString("transitNumber","").equals("")){
+            mTransitNumberEditText.setText(sharedPreferences.getString("transitNumber",""));
+        }
+        if((!sharedPreferences.getString("institutionNumber","").equals("")) && isCanada){
+            mInstitutionNumberEditText.setText(sharedPreferences.getString("institutionNumber",""));
+        }
     }
 
     @Override
@@ -126,6 +142,28 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
         mBankAccountHelp.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    public interface OnBackPressedListener {
+        public void doBack();
+    }
+
+    public class BaseBackPressedListener implements OnBackPressedListener {
+        private final Activity activity;
+
+        public BaseBackPressedListener(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void doBack() {
+            editSharedPreferences.putString("bankAccountNumber",mBankAccountNumber.getText().toString());
+            editSharedPreferences.putString("transitNumber",mTransitNumberEditText.getText().toString());
+            if(isCanada){
+                editSharedPreferences.putString("institutionNumber",mInstitutionNumberEditText.getText().toString());
+            }
+            editSharedPreferences.commit();
+        }
+    }
+
     private void setFormValidators(){
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,12 +187,6 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
                     hasErrors = true;
                 }
                 if(hasErrors){
-                    editSharedPreferences.putString("bankAccountNumber",mBankAccountNumber.getText().toString());
-                    editSharedPreferences.putString("transitNumber",mTransitNumberEditText.getText().toString());
-                    if(isCanada){
-                        editSharedPreferences.putString("institutionNumber",mInstitutionNumberEditText.getText().toString());
-                    }
-                    editSharedPreferences.commit();
                     DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
                     fragment.show(getActivity().getFragmentManager(), "error");
                 }else{

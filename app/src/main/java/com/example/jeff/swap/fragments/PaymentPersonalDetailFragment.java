@@ -37,7 +37,6 @@ public class PaymentPersonalDetailFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editSharedPreferences;
 
-    private TableLayout mTableLayout;
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mCity;
@@ -74,6 +73,7 @@ public class PaymentPersonalDetailFragment extends Fragment {
         mPostalCode = (EditText) view.findViewById(R.id.postalCode);
         mAddress = (EditText) view.findViewById(R.id.address);
         mNextButton = (Button) view.findViewById(R.id.nextButton);
+        setInputedValues();
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -98,9 +98,31 @@ public class PaymentPersonalDetailFragment extends Fragment {
 
             }
         });
-        setSpinner("Canada");
+        if(!sharedPreferences.getString("country","").equals("")){
+            setSpinner(sharedPreferences.getString("country",""));
+        }else{
+            setSpinner("Canada");
+        }
         setFormValidators();
         return view;
+    }
+
+    private void setInputedValues(){
+        if(!sharedPreferences.getString("firstName","").equals("")){
+            mFirstName.setText(sharedPreferences.getString("firstName",""));
+        }
+        if(!sharedPreferences.getString("lastName","").equals("")){
+            mLastName.setText(sharedPreferences.getString("lastName",""));
+        }
+        if(!sharedPreferences.getString("city","").equals("")){
+            mCity.setText(sharedPreferences.getString("city",""));
+        }
+        if(!sharedPreferences.getString("postalCode","").equals("")){
+            mPostalCode.setText(sharedPreferences.getString("postalCode",""));
+        }
+        if(!sharedPreferences.getString("address","").equals("")){
+            mAddress.setText(sharedPreferences.getString("address",""));
+        }
     }
 
     private void setSpinner(String countryProvince){
@@ -113,6 +135,11 @@ public class PaymentPersonalDetailFragment extends Fragment {
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, stuff);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
         provinceSpinner.setAdapter(spinnerArrayAdapter);
+        int setPosition = 0;
+        if((!sharedPreferences.getString("province","").equals("")) && (sharedPreferences.getString("country","").equals(countryProvince))){
+            setPosition = spinnerArrayAdapter.getPosition(sharedPreferences.getString("province",""));
+            provinceSpinner.setSelection(setPosition);
+        }
     }
 
     private void setFormValidators(){
