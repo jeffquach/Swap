@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
  */
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostViewHolder>{
 
+    private String FLICKR_REGEX = ".*\\b(staticflickr)\\b.*";
+
     private List<Post> mPosts;
     private PostViewListener mPostViewListener;
 
@@ -48,8 +50,13 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         Post post = mPosts.get(position);
         String pattern = BuildConfig.SERVER_URL+"/image/uploads/(?!undefined)";
         Pattern patternToMatch = Pattern.compile(pattern);
-        Matcher regexMatch = patternToMatch.matcher(post.getImageUrl());
-        if (regexMatch.lookingAt()){
+        String imageUrl = post.getImageUrl();
+        Matcher regexMatch = patternToMatch.matcher(imageUrl);
+        Log.i("onBindViewHolder","$$$$$ post.getImageUrl() $$$$$: "+(post.getImageUrl()));
+        Log.i("onBindViewHolder","$$$$$ regexMatch.lookingAt() $$$$$: "+(regexMatch.lookingAt()));
+        Log.i("onBindViewHolder","$$$$$ Pattern.matches(FLICKR_REGEX,imageUrl $$$$$: "+(Pattern.matches(FLICKR_REGEX,imageUrl)));
+        Log.i("onBindViewHolder","$$$$$ $$$$$ $$$$$");
+        if (regexMatch.lookingAt() || (Pattern.matches(FLICKR_REGEX,imageUrl))){
             mPostViewListener.addImageToQueue(viewHolder.mPostImageView, post.getImageUrl());
 //                for (int i = position+1; i < getItemCount(); i++){
 //                    Post postsAhead = mPosts.get(i);

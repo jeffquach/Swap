@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,9 @@ import com.example.jeff.swap.BuildConfig;
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
 import com.example.jeff.swap.activities.TermsOfServiceActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -52,7 +56,7 @@ import java.util.Date;
 /**
  * Created by jeff on 15-03-07.
  */
-public class PostUploadFragment extends Fragment {
+public class PostUploadFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private SharedPreferences sharedPreferences;
     private Button takePhotoButton;
@@ -71,6 +75,8 @@ public class PostUploadFragment extends Fragment {
     private boolean sendDataWithPicture = false;
 
     private Bitmap bitmapToUpload;
+    protected Location mLastLocation;
+    protected GoogleApiClient mGoogleApiClient;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -83,7 +89,7 @@ public class PostUploadFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.i("onStart","$$$ onStart called $$$");
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -102,7 +108,9 @@ public class PostUploadFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.i("onStop","$$$ onStop called $$$");
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -115,6 +123,37 @@ public class PostUploadFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i("onDestroy","$$$ onDestroy called $$$");
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            Log.i("LAATITUDE","$$$$$$ String.valueOf(mLastLocation.getLatitude()) $$$$$$$: "+(String.valueOf(mLastLocation.getLatitude())));
+            Log.i("LONGITUDE","$$$$$ String.valueOf(mLastLocation.getLongitude()) $$$$$: "+(String.valueOf(mLastLocation.getLongitude())));
+            Toast.makeText(getActivity(),"Latitude: "+(String.valueOf(mLastLocation.getLatitude()))+"\nLongitude: "+(String.valueOf(mLastLocation.getLongitude())),Toast.LENGTH_LONG).show();
+//            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
+//            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i("STUFF", "Connection suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i("STUFF", "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     @Nullable
@@ -210,6 +249,7 @@ public class PostUploadFragment extends Fragment {
                 Toast.makeText(getActivity(),"Country: "+country+" , Country name: "+countryName,Toast.LENGTH_LONG).show();
             }
         });
+        buildGoogleApiClient();
         return view;
     }
 

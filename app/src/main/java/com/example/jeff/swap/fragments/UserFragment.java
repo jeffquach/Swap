@@ -2,8 +2,11 @@ package com.example.jeff.swap.fragments;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -103,14 +106,27 @@ public class UserFragment extends Fragment {
         }
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()
+                && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
     private class Load extends AsyncTask<String, String, JSONArray>{
         @Override
         protected JSONArray doInBackground(String... args){
-            JSONParser jsonParser = new JSONParser();
-//            params = new ArrayList<NameValuePair>();
-//            params.add(new BasicNameValuePair("phoneNumber",prefs.getString("REGISTRATION_PHONE_NUMBER","")));
-            JSONArray jsonArray = jsonParser.getJSONArray(BuildConfig.SERVER_URL+"/users?phoneNumber="+prefs.getString("REGISTRATION_PHONE_NUMBER",""));
-            return jsonArray;
+            if (isOnline()){
+                JSONParser jsonParser = new JSONParser();
+                JSONArray jsonArray = jsonParser.getJSONArray(BuildConfig.SERVER_URL+"/users?phoneNumber="+prefs.getString("REGISTRATION_PHONE_NUMBER",""));
+                return jsonArray;
+            }else{
+                return null;
+            }
         }
         @Override
         protected void onPostExecute(JSONArray json){
@@ -144,6 +160,8 @@ public class UserFragment extends Fragment {
                         startActivity(chat);
                     }
                 });
+            }else{
+                Toast.makeText(getActivity(),"There was a problem making an internet connection",Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -12,6 +12,9 @@
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.CAMERA" />
 
     // This directive is for the Google Play store saying to only offer the app to people who have cameras on their devices
