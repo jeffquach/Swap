@@ -8,11 +8,13 @@
     </facet>
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="jamilWinkelbaumReleaseClone" />
+        <option name="SELECTED_BUILD_VARIANT" value="jamilWinkelbaumDebug" />
         <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleJamilWinkelbaumReleaseClone" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileJamilWinkelbaumReleaseCloneSources" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateJamilWinkelbaumReleaseCloneSources" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleJamilWinkelbaumDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileJamilWinkelbaumDebugSources" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleJamilWinkelbaumDebugAndroidTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateJamilWinkelbaumDebugSources" />
+        <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateJamilWinkelbaumDebugAndroidTestSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -22,23 +24,29 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/intermediates/classes/jamilWinkelbaum/releaseClone" />
-    <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/jamilWinkelbaum/releaseClone" />
+    <output url="file://$MODULE_DIR$/build/intermediates/classes/jamilWinkelbaum/debug" />
+    <output-test url="file://$MODULE_DIR$/build/intermediates/classes/androidTest/jamilWinkelbaum/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/jamilWinkelbaum/releaseClone" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/jamilWinkelbaum/releaseClone" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/jamilWinkelbaum/releaseClone" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/jamilWinkelbaum/releaseClone" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/jamilWinkelbaum/releaseClone" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/jamilWinkelbaum/releaseClone" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/assets" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumReleaseClone/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/jamilWinkelbaum/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/jamilWinkelbaum/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/jamilWinkelbaum/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/jamilWinkelbaum/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/jamilWinkelbaum/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/jamilWinkelbaum/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaumDebug/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/jamilWinkelbaum/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/jamilWinkelbaum/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/jamilWinkelbaum/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/jamilWinkelbaum/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/jamilWinkelbaum/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/androidTest/jamilWinkelbaum/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaum/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaum/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/jamilWinkelbaum/assets" type="java-resource" />
@@ -53,13 +61,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestJamilWinkelbaum/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestJamilWinkelbaum/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestJamilWinkelbaum/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/assets" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/releaseClone/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/assets" type="java-resource" />
@@ -98,20 +106,36 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Java-WebSocket-1.3.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
-    <orderEntry type="library" exported="" name="stripe-android-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="httpclient-android-4.3.5" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-5.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="objenesis-1.3" level="project" />
     <orderEntry type="library" exported="" name="socket.io-client-0.4.0" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="httpmime-4.3.6" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="ant-1.8.0" level="project" />
     <orderEntry type="library" exported="" name="stripe-java-1.15.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="engine.io-client-0.4.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="sqlite4java-0.282" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="maven-ant-tasks-2.1.3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="robolectric-annotations-2.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="commons-codec-1.3" level="project" />
+    <orderEntry type="library" exported="" name="Java-WebSocket-1.3.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="stripe-android-1.0.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="robolectric-2.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="vtd-xml-2.11" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-commons-5.0.1" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-android-4.3.5" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-analysis-5.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.3.6" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="ant-launcher-1.8.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-util-5.0.1" level="project" />
   </component>
 </module>
 

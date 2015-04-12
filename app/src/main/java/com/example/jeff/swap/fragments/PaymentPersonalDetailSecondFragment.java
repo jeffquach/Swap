@@ -47,7 +47,6 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
     private final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private final String PERSONAL_ID_NUMBER_REGEX = "\\d*";
     private final String SIN_REGEX = "\\d{9}";
-    private final String SSN_REGEX = "\\d{4}";
     private boolean isCanada = false;
 
     private String dobMonthString;
@@ -84,7 +83,7 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
             personalIdTextView.setText("Social Insurance Number (SIN)");
             isCanada = true;
         }else{
-            personalIdTextView.setText("Social Security Number (SSN) last 4 digits");
+            personalIdTextView.setText("Social Security Number (SSN)");
         }
 
         mEmailAddress.addTextChangedListener(new TextWatcher() {
@@ -121,11 +120,11 @@ public class PaymentPersonalDetailSecondFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if(isCanada){
                     if(!Pattern.matches(SIN_REGEX, mPersonalIdNumber.getText().toString())){
-                        mPersonalIdNumber.setError("Your SIN must be a maximum of 9 digits");
+                        mPersonalIdNumber.setError("Your SIN must be 9 digits long");
                     }
                 }else{
-                    if(!Pattern.matches(SSN_REGEX, mPersonalIdNumber.getText().toString())){
-                        mPersonalIdNumber.setError("Your SSN must be a maximum of 4 digits");
+                    if(!Pattern.matches(SIN_REGEX, mPersonalIdNumber.getText().toString())){
+                        mPersonalIdNumber.setError("Your SSN must be 9 digits long");
                     }
                 }
             }

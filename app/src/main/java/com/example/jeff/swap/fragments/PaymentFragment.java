@@ -66,6 +66,18 @@ public class PaymentFragment extends Fragment{
         mExpiryMonth = (EditText) view.findViewById(R.id.expMonth);
         mExpiryYear = (EditText) view.findViewById(R.id.expYear);
         mCvc = (EditText) view.findViewById(R.id.cvc);
+        mPersonalDetailsButton = (Button) view.findViewById(R.id.personalDetails);
+        mPersonalDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment personalDetailsFragment = new PaymentPersonalDetailFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragmentContainer,personalDetailsFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack("PaymentPersonalDetailFragment");
+                ft.commit();
+            }
+        });
         mSaveCardButton = (Button) view.findViewById(R.id.saveCreditCard);
         mSaveCardButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -87,18 +99,6 @@ public class PaymentFragment extends Fragment{
                 } else {
                     handleError("The card details that you entered are invalid");
                 }
-            }
-        });
-        mPersonalDetailsButton = (Button) view.findViewById(R.id.personalDetails);
-        mPersonalDetailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment personalDetailsFragment = new PaymentPersonalDetailFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragmentContainer,personalDetailsFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack("PaymentPersonalDetailFragment");
-                ft.commit();
             }
         });
         return view;

@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -28,8 +31,19 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeff.swap.BuildConfig;
+import com.example.jeff.swap.JSONParser;
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by jeff on 15-04-08.
@@ -38,6 +52,8 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editSharedPreferences;
+    private String defaultCurrency = "usd";
+    private String countryCode = "US";
 
     private EditText mBankAccountNumber;
     private TableRow mDynamicTableRow;
@@ -49,6 +65,7 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
     private TextView mBankAccountHelp;
     private Button mNextButton;
     private final String PERSONAL_ID_NUMBER_REGEX = "\\d*";
+    private final String ROUTING_NUMBER_REGEX = "\\d{9}";
     private boolean isCanada = false;
     private PaymentActivity paymentActivity;
 
@@ -78,9 +95,8 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
 
         if(sharedPreferences.getString("country","").equals("Canada")){
             isCanada = true;
-        }
-
-        if(isCanada){
+            defaultCurrency = "cad";
+            countryCode = "CA";
             mTransitNumberTextView.setText("Transit number");
             mTransitNumberEditText.setHint("Transit number");
             Context context = (PaymentActivity) getActivity();
@@ -99,6 +115,24 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
         }else{
             mTransitNumberTextView.setText("Routing number");
             mTransitNumberEditText.setHint("Routing number");
+            mTransitNumberEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(!Pattern.matches(ROUTING_NUMBER_REGEX, mTransitNumberEditText.getText().toString())){
+                        mTransitNumberEditText.setError("Your routing number must have 9 digits");
+                    }
+                }
+            });
         }
         setFormValidators();
         paymentActivity.setOnBackPressedListener(new BaseBackPressedListener(paymentActivity));
@@ -142,28 +176,6 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
         mBankAccountHelp.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public interface OnBackPressedListener {
-        public void doBack();
-    }
-
-    public class BaseBackPressedListener implements OnBackPressedListener {
-        private final Activity activity;
-
-        public BaseBackPressedListener(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public void doBack() {
-            editSharedPreferences.putString("bankAccountNumber",mBankAccountNumber.getText().toString());
-            editSharedPreferences.putString("transitNumber",mTransitNumberEditText.getText().toString());
-            if(isCanada){
-                editSharedPreferences.putString("institutionNumber",mInstitutionNumberEditText.getText().toString());
-            }
-            editSharedPreferences.commit();
-        }
-    }
-
     private void setFormValidators(){
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,9 +202,73 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
                     DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
                     fragment.show(getActivity().getFragmentManager(), "error");
                 }else{
-                    Toast.makeText(getActivity(), "Everything good to go yo!", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), "Everything good to go yo!", Toast.LENGTH_LONG).show();
+                    new SendPersonalInfo().execute();
                 }
             }
         });
+    }
+
+    public class BaseBackPressedListener {
+        private final Activity activity;
+
+        public BaseBackPressedListener(Activity activity) {
+            this.activity = activity;
+        }
+
+        public void doBack() {
+            editSharedPreferences.putString("bankAccountNumber",mBankAccountNumber.getText().toString());
+            editSharedPreferences.putString("transitNumber",mTransitNumberEditText.getText().toString());
+            if(isCanada){
+                editSharedPreferences.putString("institutionNumber",mInstitutionNumberEditText.getText().toString());
+            }
+            editSharedPreferences.commit();
+        }
+    }
+
+    private class SendPersonalInfo extends AsyncTask<Void,Void,JSONObject>{
+
+        @Override
+        protected JSONObject doInBackground(Void... stuff) {
+            List<NameValuePair> params = new LinkedList<NameValuePair>();
+            params.add(new BasicNameValuePair("country",countryCode));
+            params.add(new BasicNameValuePair("transitNumber",mTransitNumberEditText.getText().toString()));
+            if(isCanada){
+                params.add(new BasicNameValuePair("institutionNumber",mInstitutionNumberEditText.getText().toString()));
+            }
+            params.add(new BasicNameValuePair("bankAccountNumber",mBankAccountNumber.getText().toString()));
+            params.add(new BasicNameValuePair("currency",defaultCurrency));
+            params.add(new BasicNameValuePair("email",sharedPreferences.getString("emailAddress","")));
+            params.add(new BasicNameValuePair("address",sharedPreferences.getString("address","")));
+            params.add(new BasicNameValuePair("city",sharedPreferences.getString("city","")));
+            params.add(new BasicNameValuePair("state",sharedPreferences.getString("province","")));
+            params.add(new BasicNameValuePair("postalCode",sharedPreferences.getString("postalCode","")));
+            params.add(new BasicNameValuePair("firstName",sharedPreferences.getString("firstName","")));
+            params.add(new BasicNameValuePair("lastName",sharedPreferences.getString("lastName","")));
+            params.add(new BasicNameValuePair("birthdayDay",sharedPreferences.getString("dobDay","")));
+            params.add(new BasicNameValuePair("birthdayMonth",sharedPreferences.getString("dobMonth","")));
+            params.add(new BasicNameValuePair("birthdayYear",sharedPreferences.getString("dobYear","")));
+            params.add(new BasicNameValuePair("personalIdNumber",sharedPreferences.getString("personalIdNumber","")));
+            JSONObject jsonObject = new JSONParser().getJSONFromUrl(BuildConfig.SERVER_URL+"/stripe/newAccount",params);
+            return jsonObject;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            try {
+                String response = jsonObject.getString("response");
+                if (response.equals("Success")){
+                    showResponseMessage(jsonObject.getString("message"));
+                }else if(response.equals("Error")){
+                    showResponseMessage(jsonObject.getString("message"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void showResponseMessage(String message){
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 }

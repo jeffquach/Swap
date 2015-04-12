@@ -9,7 +9,7 @@ import com.example.jeff.swap.fragments.PaymentPersonalDetailThirdFragment;
  * Created by jeff on 15-04-04.
  */
 public class PaymentActivity extends SingleFragmentActivity {
-    protected PaymentPersonalDetailThirdFragment.OnBackPressedListener onBackPressedListener;
+    protected PaymentPersonalDetailThirdFragment.BaseBackPressedListener onBackPressedListener;
     @Override
     protected Fragment createFragment(){
         return new PaymentFragment();
@@ -27,7 +27,7 @@ public class PaymentActivity extends SingleFragmentActivity {
         }
     }
 
-    public void setOnBackPressedListener(PaymentPersonalDetailThirdFragment.OnBackPressedListener onBackPressedListener) {
+    public void setOnBackPressedListener(PaymentPersonalDetailThirdFragment.BaseBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
     }
 }
