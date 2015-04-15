@@ -58,7 +58,7 @@ public class MSGService extends IntentService {
                     editSharedPreferences.commit();
                     sendNotification(chatMessage,extras.getString("phoneNumber"), senderName);
                 }
-                Log.i("MESSAGE RECEIVED FROM INTENT","MESSAGE: "+extras.getString("msg"));
+                Log.i("MESSAGE FROM INTENT","MESSAGE: "+extras.getString("msg"));
             }
         }
         MSGReceiver.completeWakefulIntent(intent);

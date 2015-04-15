@@ -3,6 +3,7 @@ package com.example.jeff.swap.fragments;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -36,6 +37,8 @@ import com.example.jeff.swap.activities.PaymentActivity;
 import com.example.jeff.swap.activities.TermsOfServiceActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import org.apache.http.HttpResponse;
@@ -56,7 +59,7 @@ import java.util.Date;
 /**
  * Created by jeff on 15-03-07.
  */
-public class PostUploadFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class PostUploadFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private SharedPreferences sharedPreferences;
     private Button takePhotoButton;
@@ -77,8 +80,15 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     private Bitmap bitmapToUpload;
     protected Location mLastLocation;
     protected GoogleApiClient mGoogleApiClient;
+    protected Boolean mRequestingLocationUpdates;
+    protected LocationRequest mLocationRequest;
+    private TextView mLatitudeTextView;
+    private TextView mLongitudeTextView;
+    private Button mStartGPS;
+    private Button mStopGPS;
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String ACTION_LOCATION = "com.example.jeff.swap.fragments.ACTION_LOCATION";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +113,10 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     public void onPause() {
         super.onPause();
         Log.i("onPause","$$$ onPause called $$$");
+        stopLocationUpdates();
+//        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+//            startLocationUpdates();
+//        }
     }
 
     @Override
@@ -131,6 +145,49 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        createLocationRequest();
+    }
+
+    private PendingIntent getLocationPendingIntent(boolean shouldCreate) {
+        Intent broadcast = new Intent(ACTION_LOCATION);
+        int flags = shouldCreate ? 0 : PendingIntent.FLAG_NO_CREATE;
+        return PendingIntent.getBroadcast(getActivity(), 0, broadcast, flags);
+    }
+
+    /**
+     * Requests location updates from the FusedLocationApi.
+     */
+    protected void startLocationUpdates() {
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        PendingIntent pendingIntent = getLocationPendingIntent(true);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    /**
+     * Removes location updates from the FusedLocationApi.
+     */
+    protected void stopLocationUpdates() {
+        // It is a good practice to remove location requests when the activity is in a paused or
+        // stopped state. Doing so helps battery performance and is especially
+        // recommended in applications that request frequent location updates.
+
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        PendingIntent pendingIntent = getLocationPendingIntent(false);
+        if (pendingIntent != null){
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            pendingIntent.cancel();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        Log.i("LOCATION CHANGED","$$$$$ mLastLocation.getLatitude() $$$$$: "+(mLastLocation.getLatitude()));
+        Log.i("LOCATION CHANGED","$$$$$ mLastLocation.getLongitude() $$$$$: "+(mLastLocation.getLongitude()));
+        mLatitudeTextView.setText("Latitude: "+(Double.toString(mLastLocation.getLatitude())));
+        mLongitudeTextView.setText("Longitude: "+(Double.toString(mLastLocation.getLongitude())));
     }
 
     @Override
@@ -142,6 +199,9 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
             Toast.makeText(getActivity(),"Latitude: "+(String.valueOf(mLastLocation.getLatitude()))+"\nLongitude: "+(String.valueOf(mLastLocation.getLongitude())),Toast.LENGTH_LONG).show();
 //            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
 //            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+        }
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
         }
     }
 
@@ -171,6 +231,23 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         registerBankAccount = (Button) view.findViewById(R.id.register_bank_account);
         registerBankAccountHelp = (ImageButton) view.findViewById(R.id.register_bank_account_help);
         termsOfService = (TextView) view.findViewById(R.id.terms_of_service);
+        mLatitudeTextView = (TextView) view.findViewById(R.id.latitude);
+        mLongitudeTextView = (TextView) view.findViewById(R.id.longitude);
+        mStartGPS = (Button) view.findViewById(R.id.startGPS);
+        mStopGPS = (Button) view.findViewById(R.id.stopGPS);
+
+        mStartGPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLocationUpdates();
+            }
+        });
+        mStopGPS.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                stopLocationUpdates();
+            }
+        });
 
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,7 +327,16 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
             }
         });
         buildGoogleApiClient();
+        mRequestingLocationUpdates = false;
         return view;
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(3000);
+        mLocationRequest.setExpirationDuration(13000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     private void showTermsOfServiceMessage(){
