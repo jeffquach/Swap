@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     // This directive is for the Google Play store saying to only offer the app to people who have cameras on their devices
@@ -36,7 +37,15 @@
                 <category android:name="com.example.gcm" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.example.jeff.swap.GPSBackgroundLocationReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.jeff.swap.GPS_SERVICE_ACTION_LOCATION" />
+            </intent-filter>
+        </receiver>
         <service android:name="com.example.jeff.swap.MSGService" />
+        <service android:name="com.example.jeff.swap.GPSBackgroundService" android:enabled="true" />
         <activity
             android:name="com.example.jeff.swap.activities.MainActivity"
             android:label="@string/app_name" >

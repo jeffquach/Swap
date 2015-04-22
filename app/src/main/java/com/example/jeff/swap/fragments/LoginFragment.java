@@ -68,6 +68,10 @@ public class LoginFragment extends Fragment {
             params.add(new BasicNameValuePair("username",username.getText().toString()));
             params.add(new BasicNameValuePair("phoneNumber",phoneNumber.getText().toString()));
             params.add(new BasicNameValuePair("registration_id",prefs.getString("REGISTRATION_ID","")));
+            ///// CHANGE THIS LATER!!!! //////
+            params.add(new BasicNameValuePair("longitude",String.valueOf(-79.490167)));
+            params.add(new BasicNameValuePair("latitude",String.valueOf(43.666165)));
+            ///// CHANGE THIS LATER!!!! //////
             JSONObject jsonObject = json.getJSONFromUrl(BuildConfig.SERVER_URL+"/login",params);
             return jsonObject;
         }

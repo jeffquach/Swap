@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,9 +35,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.swap.BuildConfig;
+import com.example.jeff.swap.GPSBackgroundService;
+import com.example.jeff.swap.ProximityIntentReceiver;
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
 import com.example.jeff.swap.activities.TermsOfServiceActivity;
+import com.example.jeff.swap.models.MockLocationProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -86,14 +92,28 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     private TextView mLongitudeTextView;
     private Button mStartGPS;
     private Button mStopGPS;
+    private Button mProximityAlert;
+    private EditText mockLatitudeEditText;
+    private EditText mockLongitudeEditText;
+    private Button mockPositionButton;
+    private EditText fakeLatitudeEditText;
+    private EditText fakeLongitudeEditText;
+    private LocationManager locationManager;
+    private static final String PROXIMITY_ALERT_INTENT = "com.example.jeff.swap.fragments.ProximityAlert";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String ACTION_LOCATION = "com.example.jeff.swap.fragments.ACTION_LOCATION";
 
+    private ProximityIntentReceiver mProximityReceiver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("onCreate","$$$ onCreate called $$$");
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        MockLocationProvider mockLocationProvider = new MockLocationProvider(LocationManager.NETWORK_PROVIDER,getActivity());
+        mockLocationProvider.pushLocation(39.946682, 116.355316);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50, 0, getLocationPendingIntent(true));
+        Log.i("onCreate", "$$$ onCreate called $$$");
     }
 
     @Override
@@ -136,7 +156,7 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("onDestroy","$$$ onDestroy called $$$");
+        Log.i("onDestroy", "$$$ onDestroy called $$$");
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -146,6 +166,15 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
                 .addApi(LocationServices.API)
                 .build();
         createLocationRequest();
+    }
+
+    private void addProximityAlert(double latitude, double longitude){
+        Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+        locationManager.addProximityAlert(latitude,longitude,1000f,-1,pendingIntent);
+        mProximityReceiver = new ProximityIntentReceiver();
+        getActivity().registerReceiver(mProximityReceiver,new IntentFilter(PROXIMITY_ALERT_INTENT));
+        Toast.makeText(getActivity(),"New proximity alert created! Lat: "+latitude+", longitude: "+longitude,Toast.LENGTH_SHORT).show();
     }
 
     private PendingIntent getLocationPendingIntent(boolean shouldCreate) {
@@ -174,15 +203,18 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
 
         // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
-        PendingIntent pendingIntent = getLocationPendingIntent(false);
-        if (pendingIntent != null){
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            pendingIntent.cancel();
-        }
+//        PendingIntent pendingIntent = getLocationPendingIntent(false);
+//        Log.i("LOCATION YO!","$$$$$ pendingIntent != null $$$$$: "+(pendingIntent != null));
+//        if (pendingIntent != null){
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//            pendingIntent.cancel();
+//        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        float distance = mLastLocation.distanceTo(location);
+        Toast.makeText(getActivity(),"Distance from previous location: "+distance,Toast.LENGTH_LONG).show();
         mLastLocation = location;
         Log.i("LOCATION CHANGED","$$$$$ mLastLocation.getLatitude() $$$$$: "+(mLastLocation.getLatitude()));
         Log.i("LOCATION CHANGED","$$$$$ mLastLocation.getLongitude() $$$$$: "+(mLastLocation.getLongitude()));
@@ -197,8 +229,8 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
             Log.i("LAATITUDE","$$$$$$ String.valueOf(mLastLocation.getLatitude()) $$$$$$$: "+(String.valueOf(mLastLocation.getLatitude())));
             Log.i("LONGITUDE","$$$$$ String.valueOf(mLastLocation.getLongitude()) $$$$$: "+(String.valueOf(mLastLocation.getLongitude())));
             Toast.makeText(getActivity(),"Latitude: "+(String.valueOf(mLastLocation.getLatitude()))+"\nLongitude: "+(String.valueOf(mLastLocation.getLongitude())),Toast.LENGTH_LONG).show();
-//            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-//            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+            mLatitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
+            mLongitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
         }
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
@@ -235,17 +267,36 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         mLongitudeTextView = (TextView) view.findViewById(R.id.longitude);
         mStartGPS = (Button) view.findViewById(R.id.startGPS);
         mStopGPS = (Button) view.findViewById(R.id.stopGPS);
+        mockLatitudeEditText = (EditText) view.findViewById(R.id.mockLatitude);
+        mockLongitudeEditText = (EditText) view.findViewById(R.id.mockLongitude);
+        mProximityAlert = (Button) view.findViewById(R.id.proximityAlert);
+        fakeLatitudeEditText = (EditText) view.findViewById(R.id.fakeLatitude);
+        fakeLongitudeEditText = (EditText) view.findViewById(R.id.fakeLongitude);
+        mockPositionButton = (Button) view.findViewById(R.id.setFakeLocation);
+
+        String username = sharedPreferences.getString("USERNAME","");
+        String phoneNumber = sharedPreferences.getString("REGISTRATION_PHONE_NUMBER","");
+        Toast.makeText(getActivity(),"USERNAME: "+username+", NUMBER: "+phoneNumber,Toast.LENGTH_LONG).show();
 
         mStartGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startLocationUpdates();
+                if (!(mockLatitudeEditText.getText().toString().equals(""))){
+                    SharedPreferences sharedPreferencesInner = getActivity().getSharedPreferences("GPSBackgroundService", 0);
+                    SharedPreferences.Editor editSharedPref = sharedPreferencesInner.edit();
+                    double latitude = Double.parseDouble(mockLatitudeEditText.getText().toString());
+                    editSharedPref.putFloat("desiredDistance", ((float) latitude)).commit();
+                }
+                Intent intent = new Intent(getActivity(), GPSBackgroundService.class);
+                getActivity().startService(intent);
             }
         });
         mStopGPS.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                stopLocationUpdates();
+                getActivity().stopService(new Intent(getActivity(), GPSBackgroundService.class));
+//                SharedPreferences.Editor sharedPrefService = getActivity().getSharedPreferences("GPSBackgroundService",0).edit();
+//                sharedPrefService.putBoolean("shouldCancel",true).commit();
             }
         });
 
@@ -328,15 +379,65 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         });
         buildGoogleApiClient();
         mRequestingLocationUpdates = false;
+
+        mProximityAlert.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                double latitude = Double.parseDouble(mockLatitudeEditText.getText().toString());
+                SharedPreferences sharedPreferencesInner = getActivity().getSharedPreferences("GPSBackgroundService",0);
+                SharedPreferences.Editor editSharedPref = sharedPreferencesInner.edit();
+                editSharedPref.putFloat("desiredDistance",((float)latitude)).commit();
+                Toast.makeText(getActivity(),"YALL entered: "+(sharedPreferencesInner.getFloat("desiredDistance",0f)),Toast.LENGTH_LONG).show();
+            }
+        });
+//        mockPositionButton.setOnClickListener(new View.OnClickListener(){
+//            @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+//            @Override
+//            public void onClick(View v) {
+////                locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
+////                Location fakeLocation = new Location(LocationManager.GPS_PROVIDER);
+////                fakeLocation.setLatitude(Double.parseDouble(fakeLatitudeEditText.getText().toString()));
+////                fakeLocation.setLongitude(Double.parseDouble(fakeLongitudeEditText.getText().toString()));
+////                locationManager.setTestProviderLocation(LocationManager.GPS_PROVIDER, fakeLocation);
+////                Toast.makeText(getActivity(),"Your new location yo, latitude: "+(fakeLocation.getLatitude())+" , longitude: "+(fakeLocation.getLongitude()),Toast.LENGTH_LONG).show();
+//
+//                final String providerName = "MyFancyGPSProvider";
+//                locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+////Remember to remove your your provider before using it or after.
+////In other case it won't be remove till restarting the phone.
+//                if (locationManager.getProvider(providerName) != null) {
+//                    locationManager.removeTestProvider(providerName);
+//                }
+//                locationManager.addTestProvider(providerName, true, false, false, false, true, true, true,
+//                        Criteria.POWER_LOW, Criteria.ACCURACY_FINE);
+//                locationManager.setTestProviderEnabled(providerName, true);
+//                Location loc = new Location(providerName);
+//                loc.setLongitude(Double.parseDouble(fakeLatitudeEditText.getText().toString()));
+//                loc.setTime(System.currentTimeMillis());
+//                loc.setLatitude(Double.parseDouble(fakeLongitudeEditText.getText().toString()));
+//                loc.setAccuracy(5.555f);
+//                loc.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+//                locationManager.setTestProviderLocation(providerName, loc);
+//            }
+//        });
+//        addProximityAlert(43.661570,-79.469482);
+//
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                addProximityAlert(43.661570,-79.469482);
+//            }
+//        }, 10000);
         return view;
     }
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(5000);
+        mLocationRequest.setInterval(3000);
         mLocationRequest.setFastestInterval(3000);
-        mLocationRequest.setExpirationDuration(13000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        //mLocationRequest.setSmallestDisplacement(2f);
     }
 
     private void showTermsOfServiceMessage(){
