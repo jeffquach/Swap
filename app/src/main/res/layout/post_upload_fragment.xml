@@ -114,38 +114,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
             android:hint="Enter latitude yo"/>
-        <EditText
-            android:id="@+id/mockLongitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:hint="Enter longitude yo"/>
-        <Button
-            android:id="@+id/proximityAlert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Initiate proximity alert"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set Mock Location YO:"/>
-        <EditText
-            android:id="@+id/fakeLatitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:hint="Enter latitude yo"/>
-        <EditText
-            android:id="@+id/fakeLongitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:hint="Enter longitude yo"/>
-        <Button
-            android:id="@+id/setFakeLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set ma fake location gangsta!"/>
-        </LinearLayout>
+
+    </LinearLayout>
 
 </ScrollView>

@@ -3,14 +3,11 @@ package com.example.jeff.swap.fragments;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -89,23 +86,14 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     private TextView mLongitudeTextView;
     private Button mStartGPS;
     private Button mStopGPS;
-    private Button mProximityAlert;
     private EditText mockLatitudeEditText;
-    private EditText mockLongitudeEditText;
-    private Button mockPositionButton;
-    private EditText fakeLatitudeEditText;
-    private EditText fakeLongitudeEditText;
-    private LocationManager locationManager;
-    private static final String PROXIMITY_ALERT_INTENT = "com.example.jeff.swap.fragments.ProximityAlert";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String ACTION_LOCATION = "com.example.jeff.swap.fragments.ACTION_LOCATION";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50, 0, getLocationPendingIntent(true));
         Log.i("onCreate", "$$$ onCreate called $$$");
     }
 
@@ -126,18 +114,11 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     public void onPause() {
         super.onPause();
         Log.i("onPause","$$$ onPause called $$$");
-        stopLocationUpdates();
-//        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
-//            startLocationUpdates();
-//        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
     }
 
     @Override
@@ -161,47 +142,11 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         createLocationRequest();
     }
 
-//    private void addProximityAlert(double latitude, double longitude){
-//        Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
-//        locationManager.addProximityAlert(latitude,longitude,1000f,-1,pendingIntent);
-//        mProximityReceiver = new ProximityIntentReceiver();
-//        getActivity().registerReceiver(mProximityReceiver,new IntentFilter(PROXIMITY_ALERT_INTENT));
-//        Toast.makeText(getActivity(),"New proximity alert created! Lat: "+latitude+", longitude: "+longitude,Toast.LENGTH_SHORT).show();
-//    }
-
-    private PendingIntent getLocationPendingIntent(boolean shouldCreate) {
-        Intent broadcast = new Intent(ACTION_LOCATION);
-        int flags = shouldCreate ? 0 : PendingIntent.FLAG_NO_CREATE;
-        return PendingIntent.getBroadcast(getActivity(), 0, broadcast, flags);
-    }
-
     /**
      * Requests location updates from the FusedLocationApi.
      */
     protected void startLocationUpdates() {
-        // The final argument to {@code requestLocationUpdates()} is a LocationListener
-        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
-        PendingIntent pendingIntent = getLocationPendingIntent(true);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
-
-    /**
-     * Removes location updates from the FusedLocationApi.
-     */
-    protected void stopLocationUpdates() {
-        // It is a good practice to remove location requests when the activity is in a paused or
-        // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
-
-        // The final argument to {@code requestLocationUpdates()} is a LocationListener
-        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
-//        PendingIntent pendingIntent = getLocationPendingIntent(false);
-//        Log.i("LOCATION YO!","$$$$$ pendingIntent != null $$$$$: "+(pendingIntent != null));
-//        if (pendingIntent != null){
-//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-//            pendingIntent.cancel();
-//        }
     }
 
     @Override
@@ -261,11 +206,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         mStartGPS = (Button) view.findViewById(R.id.startGPS);
         mStopGPS = (Button) view.findViewById(R.id.stopGPS);
         mockLatitudeEditText = (EditText) view.findViewById(R.id.mockLatitude);
-        mockLongitudeEditText = (EditText) view.findViewById(R.id.mockLongitude);
-        mProximityAlert = (Button) view.findViewById(R.id.proximityAlert);
-        fakeLatitudeEditText = (EditText) view.findViewById(R.id.fakeLatitude);
-        fakeLongitudeEditText = (EditText) view.findViewById(R.id.fakeLongitude);
-        mockPositionButton = (Button) view.findViewById(R.id.setFakeLocation);
 
         String username = sharedPreferences.getString("USERNAME","");
         String phoneNumber = sharedPreferences.getString("REGISTRATION_PHONE_NUMBER","");
@@ -370,56 +310,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         });
         buildGoogleApiClient();
         mRequestingLocationUpdates = false;
-
-        mProximityAlert.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                double latitude = Double.parseDouble(mockLatitudeEditText.getText().toString());
-                SharedPreferences sharedPreferencesInner = getActivity().getSharedPreferences("GPSBackgroundService",0);
-                SharedPreferences.Editor editSharedPref = sharedPreferencesInner.edit();
-                editSharedPref.putFloat("desiredDistance",((float)latitude)).commit();
-                Toast.makeText(getActivity(),"YALL entered: "+(sharedPreferencesInner.getFloat("desiredDistance",0f)),Toast.LENGTH_LONG).show();
-            }
-        });
-//        mockPositionButton.setOnClickListener(new View.OnClickListener(){
-//            @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-//            @Override
-//            public void onClick(View v) {
-////                locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
-////                Location fakeLocation = new Location(LocationManager.GPS_PROVIDER);
-////                fakeLocation.setLatitude(Double.parseDouble(fakeLatitudeEditText.getText().toString()));
-////                fakeLocation.setLongitude(Double.parseDouble(fakeLongitudeEditText.getText().toString()));
-////                locationManager.setTestProviderLocation(LocationManager.GPS_PROVIDER, fakeLocation);
-////                Toast.makeText(getActivity(),"Your new location yo, latitude: "+(fakeLocation.getLatitude())+" , longitude: "+(fakeLocation.getLongitude()),Toast.LENGTH_LONG).show();
-//
-//                final String providerName = "MyFancyGPSProvider";
-//                locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-////Remember to remove your your provider before using it or after.
-////In other case it won't be remove till restarting the phone.
-//                if (locationManager.getProvider(providerName) != null) {
-//                    locationManager.removeTestProvider(providerName);
-//                }
-//                locationManager.addTestProvider(providerName, true, false, false, false, true, true, true,
-//                        Criteria.POWER_LOW, Criteria.ACCURACY_FINE);
-//                locationManager.setTestProviderEnabled(providerName, true);
-//                Location loc = new Location(providerName);
-//                loc.setLongitude(Double.parseDouble(fakeLatitudeEditText.getText().toString()));
-//                loc.setTime(System.currentTimeMillis());
-//                loc.setLatitude(Double.parseDouble(fakeLongitudeEditText.getText().toString()));
-//                loc.setAccuracy(5.555f);
-//                loc.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-//                locationManager.setTestProviderLocation(providerName, loc);
-//            }
-//        });
-//        addProximityAlert(43.661570,-79.469482);
-//
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                addProximityAlert(43.661570,-79.469482);
-//            }
-//        }, 10000);
         return view;
     }
 
