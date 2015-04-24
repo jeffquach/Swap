@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,11 +34,6 @@ import com.example.jeff.swap.GPSBackgroundService;
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
 import com.example.jeff.swap.activities.TermsOfServiceActivity;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -59,7 +53,7 @@ import java.util.Date;
 /**
  * Created by jeff on 15-03-07.
  */
-public class PostUploadFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class PostUploadFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
     private Button takePhotoButton;
@@ -78,12 +72,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     private boolean sendDataWithPicture = false;
 
     private Bitmap bitmapToUpload;
-    protected Location mLastLocation;
-    protected GoogleApiClient mGoogleApiClient;
-    protected Boolean mRequestingLocationUpdates;
-    protected LocationRequest mLocationRequest;
-    private TextView mLatitudeTextView;
-    private TextView mLongitudeTextView;
     private Button mStartGPS;
     private Button mStopGPS;
     private EditText mockLatitudeEditText;
@@ -100,7 +88,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
     }
 
     @Override
@@ -133,59 +120,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         Log.i("onDestroy", "$$$ onDestroy called $$$");
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        createLocationRequest();
-    }
-
-    /**
-     * Requests location updates from the FusedLocationApi.
-     */
-    protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        float distance = mLastLocation.distanceTo(location);
-        Toast.makeText(getActivity(),"Distance from previous location: "+distance,Toast.LENGTH_LONG).show();
-        mLastLocation = location;
-        Log.i("LOCATION CHANGED","$$$$$ mLastLocation.getLatitude() $$$$$: "+(mLastLocation.getLatitude()));
-        Log.i("LOCATION CHANGED","$$$$$ mLastLocation.getLongitude() $$$$$: "+(mLastLocation.getLongitude()));
-        mLatitudeTextView.setText("Latitude: "+(Double.toString(mLastLocation.getLatitude())));
-        mLongitudeTextView.setText("Longitude: "+(Double.toString(mLastLocation.getLongitude())));
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            Log.i("LAATITUDE","$$$$$$ String.valueOf(mLastLocation.getLatitude()) $$$$$$$: "+(String.valueOf(mLastLocation.getLatitude())));
-            Log.i("LONGITUDE","$$$$$ String.valueOf(mLastLocation.getLongitude()) $$$$$: "+(String.valueOf(mLastLocation.getLongitude())));
-            Toast.makeText(getActivity(),"Latitude: "+(String.valueOf(mLastLocation.getLatitude()))+"\nLongitude: "+(String.valueOf(mLastLocation.getLongitude())),Toast.LENGTH_LONG).show();
-            mLatitudeTextView.setText(String.valueOf(mLastLocation.getLatitude()));
-            mLongitudeTextView.setText(String.valueOf(mLastLocation.getLongitude()));
-        }
-        if (mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i("STUFF", "Connection suspended");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        Log.i("STUFF", "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -201,8 +135,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         registerBankAccount = (Button) view.findViewById(R.id.register_bank_account);
         registerBankAccountHelp = (ImageButton) view.findViewById(R.id.register_bank_account_help);
         termsOfService = (TextView) view.findViewById(R.id.terms_of_service);
-        mLatitudeTextView = (TextView) view.findViewById(R.id.latitude);
-        mLongitudeTextView = (TextView) view.findViewById(R.id.longitude);
         mStartGPS = (Button) view.findViewById(R.id.startGPS);
         mStopGPS = (Button) view.findViewById(R.id.stopGPS);
         mockLatitudeEditText = (EditText) view.findViewById(R.id.mockLatitude);
@@ -308,17 +240,7 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
                 Toast.makeText(getActivity(),"Country: "+country+" , Country name: "+countryName,Toast.LENGTH_LONG).show();
             }
         });
-        buildGoogleApiClient();
-        mRequestingLocationUpdates = false;
         return view;
-    }
-
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(3000);
-        mLocationRequest.setFastestInterval(3000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        //mLocationRequest.setSmallestDisplacement(2f);
     }
 
     private void showTermsOfServiceMessage(){
