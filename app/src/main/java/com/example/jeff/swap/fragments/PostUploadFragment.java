@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,11 +35,9 @@ import android.widget.Toast;
 
 import com.example.jeff.swap.BuildConfig;
 import com.example.jeff.swap.GPSBackgroundService;
-import com.example.jeff.swap.ProximityIntentReceiver;
 import com.example.jeff.swap.R;
 import com.example.jeff.swap.activities.PaymentActivity;
 import com.example.jeff.swap.activities.TermsOfServiceActivity;
-import com.example.jeff.swap.models.MockLocationProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -104,14 +101,10 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String ACTION_LOCATION = "com.example.jeff.swap.fragments.ACTION_LOCATION";
 
-    private ProximityIntentReceiver mProximityReceiver;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        MockLocationProvider mockLocationProvider = new MockLocationProvider(LocationManager.NETWORK_PROVIDER,getActivity());
-        mockLocationProvider.pushLocation(39.946682, 116.355316);
         //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50, 0, getLocationPendingIntent(true));
         Log.i("onCreate", "$$$ onCreate called $$$");
     }
@@ -168,14 +161,14 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
         createLocationRequest();
     }
 
-    private void addProximityAlert(double latitude, double longitude){
-        Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
-        locationManager.addProximityAlert(latitude,longitude,1000f,-1,pendingIntent);
-        mProximityReceiver = new ProximityIntentReceiver();
-        getActivity().registerReceiver(mProximityReceiver,new IntentFilter(PROXIMITY_ALERT_INTENT));
-        Toast.makeText(getActivity(),"New proximity alert created! Lat: "+latitude+", longitude: "+longitude,Toast.LENGTH_SHORT).show();
-    }
+//    private void addProximityAlert(double latitude, double longitude){
+//        Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+//        locationManager.addProximityAlert(latitude,longitude,1000f,-1,pendingIntent);
+//        mProximityReceiver = new ProximityIntentReceiver();
+//        getActivity().registerReceiver(mProximityReceiver,new IntentFilter(PROXIMITY_ALERT_INTENT));
+//        Toast.makeText(getActivity(),"New proximity alert created! Lat: "+latitude+", longitude: "+longitude,Toast.LENGTH_SHORT).show();
+//    }
 
     private PendingIntent getLocationPendingIntent(boolean shouldCreate) {
         Intent broadcast = new Intent(ACTION_LOCATION);
@@ -295,8 +288,6 @@ public class PostUploadFragment extends Fragment implements GoogleApiClient.Conn
             @Override
             public void onClick(View v) {
                 getActivity().stopService(new Intent(getActivity(), GPSBackgroundService.class));
-//                SharedPreferences.Editor sharedPrefService = getActivity().getSharedPreferences("GPSBackgroundService",0).edit();
-//                sharedPrefService.putBoolean("shouldCancel",true).commit();
             }
         });
 
