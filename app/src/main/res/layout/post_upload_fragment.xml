@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/postUploadLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -39,6 +40,19 @@
             android:layout_height="wrap_content"
             android:hint="Enter a city"
             android:layout_gravity="center"/>
+
+        <CheckBox
+            android:id="@+id/currentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use current location for item"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/customLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use custom location for item"/>
 
         <ImageView
             android:id="@+id/post_photo"

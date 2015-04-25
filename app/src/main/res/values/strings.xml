@@ -30,5 +30,7 @@
         <item>Canada</item>
         <item>United States</item>
     </string-array>
+    <item name="post_custom_location" type="id"></item>
+    <item name="post_custom_location_linear_layout" type="id"></item>
 
 </resources>

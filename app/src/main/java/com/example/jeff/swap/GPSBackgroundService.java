@@ -128,8 +128,8 @@ public class GPSBackgroundService extends Service implements GoogleApiClient.Con
         }
         if(mGoogleApiClient.isConnected()){
             LocationRequest locationRequest = new LocationRequest();
-            locationRequest.setInterval(3000);
-            locationRequest.setFastestInterval(3000);
+            locationRequest.setInterval(8000);
+            locationRequest.setFastestInterval(5000);
             locationRequest.setSmallestDisplacement(displacementDistance);
             locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             Intent broadcast = new Intent(ACTION_LOCATION);

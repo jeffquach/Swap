@@ -23,9 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +72,9 @@ public class PostUploadFragment extends Fragment {
     private static int imageViewHeight;
     private static int imageViewWidth;
     private boolean sendDataWithPicture = false;
+    private CheckBox currentLocationCheckbox;
+    private CheckBox customLocationCheckbox;
+    private LinearLayout postUploadLinearLayout;
 
     private Bitmap bitmapToUpload;
     private Button mStartGPS;
@@ -93,14 +98,14 @@ public class PostUploadFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("onResume","$$$ onResume called $$$");
+        Log.i("onResume", "$$$ onResume called $$$");
         showTermsOfServiceMessage();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i("onPause","$$$ onPause called $$$");
+        Log.i("onPause", "$$$ onPause called $$$");
     }
 
     @Override
@@ -138,10 +143,50 @@ public class PostUploadFragment extends Fragment {
         mStartGPS = (Button) view.findViewById(R.id.startGPS);
         mStopGPS = (Button) view.findViewById(R.id.stopGPS);
         mockLatitudeEditText = (EditText) view.findViewById(R.id.mockLatitude);
+        currentLocationCheckbox = (CheckBox) view.findViewById(R.id.currentLocation);
+        customLocationCheckbox = (CheckBox) view.findViewById(R.id.customLocation);
+        postUploadLinearLayout = (LinearLayout) view.findViewById(R.id.postUploadLinearLayout);
 
-        String username = sharedPreferences.getString("USERNAME","");
-        String phoneNumber = sharedPreferences.getString("REGISTRATION_PHONE_NUMBER","");
-        Toast.makeText(getActivity(),"USERNAME: "+username+", NUMBER: "+phoneNumber,Toast.LENGTH_LONG).show();
+        currentLocationCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentLocationCheckbox.isChecked()) {
+                    Toast.makeText(getActivity(), "YE current location yo!", Toast.LENGTH_LONG).show();
+                }
+                if (customLocationCheckbox.isChecked()) {
+                    customLocationCheckbox.setChecked(false);
+                }
+            }
+        });
+
+        customLocationCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (customLocationCheckbox.isChecked()){
+                    Toast.makeText(getActivity(),"YE CUSTOM location yo!",Toast.LENGTH_LONG).show();
+                }
+                if (currentLocationCheckbox.isChecked()) {
+                    currentLocationCheckbox.setChecked(false);
+                }
+                EditText editText = new EditText(getActivity());
+                editText.setId(R.id.post_custom_location);
+                editText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                editText.setHint("Enter address");
+                postUploadLinearLayout.addView(editText, 7);
+                LinearLayout linearLayout = new LinearLayout(getActivity());
+                linearLayout.setId(R.id.post_custom_location_linear_layout);
+                linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                EditText editTextInner1 = new EditText(getActivity());
+                editTextInner1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+                editTextInner1.setHint("Enter state / province");
+                EditText editTextInner2 = new EditText(getActivity());
+                editTextInner2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f));
+                editTextInner2.setHint("Enter zip code / postal code");
+                linearLayout.addView(editTextInner1);
+                linearLayout.addView(editTextInner2);
+                postUploadLinearLayout.addView(linearLayout, 8);
+            }
+        });
 
         mStartGPS.setOnClickListener(new View.OnClickListener() {
             @Override
