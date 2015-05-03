@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
-android {
-    signingConfigs {
-        jamilWinkelbaum {
-            keyAlias 'jamilWinkelbaum'
-            keyPassword 'jamilWinkelbaum'
-            storeFile file('/Users/jeff/keystores/jamilWinkelbaum.jks')
-            storePassword 'jamilWinkelbaum'
-        }
-    }
+android { 
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
     packagingOptions {
@@ -47,13 +39,7 @@ android {
             applicationId 'com.example.jeff.swap'
             targetSdkVersion 21
             versionCode 1
-        }
-        jamilWinkelbaum {
-            applicationId 'com.example.jeff.swap'
-            versionCode 1
-            signingConfig signingConfigs.jamilWinkelbaum
-            targetSdkVersion 21
-        }
+        } 
     }
 }
 

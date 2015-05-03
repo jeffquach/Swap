@@ -5,3 +5,5 @@
 .DS_Store
 /build
 app/build.gradle
+app/app-jamilWinkelbaum-release.apk
+app/app-jamilWinkelbaum-releaseClone.apk
