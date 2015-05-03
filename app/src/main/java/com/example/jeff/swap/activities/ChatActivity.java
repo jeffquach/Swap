@@ -50,14 +50,6 @@ public class ChatActivity extends SingleFragmentActivity {
         sharedPreferences = getSharedPreferences("Chat", 0);
         editSharedPreferences = sharedPreferences.edit();
         Bundle bundleFromIntent = intent.getBundleExtra("INFO");
-        Log.i("onNewIntent","$$$ sharedPreferences.getString(\"CURRENTLY_ACTIVE\",\"\") $$$: "+(sharedPreferences.getString("CURRENTLY_ACTIVE","")));
-        Log.i("onNewIntent","$$$ bundle.getString(\"mobno\") $$$: "+(bundleFromIntent.getString("mobno")));
-        Log.i("onNewIntent","$$$ sharedPreferences.getString(\"CURRENTLY_ACTIVE\",\"\").equals(bundleFromIntent.getString(\"mobno\")) $$$: "+(sharedPreferences.getString("CURRENTLY_ACTIVE","").equals(bundleFromIntent.getString("mobno"))));
-//        if (sharedPreferences.getString("CURRENTLY_ACTIVE","").equals(bundleFromIntent.getString("mobno"))){
-//            Log.i("STUFF","$$$ It equals hater! $$$");
-//        }else{
-//            startActivity(intent);
-//        }
         super.onNewIntent(intent);
         // getIntent() should always return the most recent
         setIntent(intent);

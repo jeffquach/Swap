@@ -30,7 +30,6 @@ public class GPSBackgroundLocationReceiver extends BroadcastReceiver {
         sharedPreferences = context.getSharedPreferences("Chat",0);
         Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
         if (location != null){
-            Log.e("TERPENTINE", "$$$$$ GPS location changed! latitude: " + (location.getLatitude()) + " , longitude: " + (location.getLongitude()));
             Toast.makeText(context,"$$$$$ GPS location changed! latitude: " + (location.getLatitude()) + " , longitude: " + (location.getLongitude()),Toast.LENGTH_LONG).show();
             new UploadLocation().execute(String.valueOf(location.getLongitude()),String.valueOf(location.getLatitude()));
         }

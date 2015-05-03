@@ -173,19 +173,12 @@ public class PostListFragment extends Fragment implements PostListAdapter.PostVi
 
                 if (loading){
                     if (totalItemCount > previousTotal){
-//                        Log.i("SCROLL","$$$ totalItemCount > previousTotal --> totalItemCount $$$: "+totalItemCount);
-//                        Log.i("SCROLL","$$$ totalItemCount > previousTotal --> previousTotal $$$: "+previousTotal);
                         loading = false;
                         previousTotal = totalItemCount;
                     }
                 }
                 if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)){
-//                    Log.i("SCROLL","$$$ NOT LOADING visibleItemCount $$$: "+visibleItemCount);
-//                    Log.i("SCROLL","$$$ NOT LOADING totalItemCount $$$: "+totalItemCount);
-//                    Log.i("SCROLL","$$$ NOT LOADING firstVisibleItem $$$: "+firstVisibleItem);
                     loading = true;
-//                    Log.i("SCROLL","$$$ THE END HAS BEEN REACHED! $$$");
-//                    Log.i("SCROLL","$$$ mPosts.size() $$$: "+(mPosts.size()));
                     mNextPageId = mPosts.get(mPosts.size()-1).getId();
                     loadNewPosts();
                 }
@@ -229,109 +222,6 @@ public class PostListFragment extends Fragment implements PostListAdapter.PostVi
         mPostImageDownloaderThread.clearQueue();
         mPostImageCacheDownloaderThread.clearQueue();
     }
-
-//    public class PostAdapter extends RecyclerView.Adapter<PostViewHolder> {
-//
-//        private List<Post> mPosts;
-//        //private Context mPostAdapterContext;
-//
-//        public PostAdapter(Context context, List<Post> posts) {
-//            //mPostAdapterContext = context;
-//            mPosts = posts;
-//        }
-//
-//        @Override
-//        public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_list_fragment_item, parent, false);
-//            return new PostViewHolder(view);
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(PostViewHolder viewHolder, int position) {
-//            Log.i("POSITION","$$$ onBindViewHolder POSITION $$$: "+position);
-//            Post post = mPosts.get(position);
-//            String pattern = BuildConfig.SERVER_URL+"/image/uploads/(?!undefined)";
-//            Pattern patternToMatch = Pattern.compile(pattern);
-//            Matcher regexMatch = patternToMatch.matcher(post.getImageUrl());
-//            //if (regexMatch.lookingAt()){
-//                mPostImageDownloaderThread.queueImage(viewHolder.mPostImageView, post.getImageUrl());
-////                for (int i = position+1; i < getItemCount(); i++){
-////                    Post postsAhead = mPosts.get(i);
-////                    String imageUrl = postsAhead.getImageUrl();
-////                    if (patternToMatch.matcher(imageUrl).lookingAt()){
-//                        //mPostImageCacheDownloaderThread.queueImageCache(post.getId(), post.getImageUrl());
-////                    }
-////                }
-////            }else{
-////                viewHolder.mPostImageView.setImageDrawable(null);
-////            }
-//            Log.i("regexMatcher","$$$ regexMatch.lookingAt() $$$: "+(regexMatch.lookingAt()));
-//            Log.i("onBindViewHolder","$$$ post.getImageUrl() $$$: "+post.getImageUrl());
-//            viewHolder.setTitle("Title: "+post.getTitle());
-//            viewHolder.setDescription("Description: "+post.getDescription());
-//            viewHolder.setCity("City: "+post.getCity());
-//            viewHolder.setUsername("User: "+post.getUsername());
-//            viewHolder.setIsRecyclable(false);
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return mPosts.size();
-//        }
-//
-//        //    @Override
-////    public int getItemViewType(int position) {
-////        return mPosts.get(position);
-////    }
-//    }
-
-//    private class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-//        private ImageView mPostImageView;
-//        private TextView mTitleView;
-//        private TextView mDescriptionView;
-//        private TextView mCityView;
-//        private TextView mUsernameView;
-//        //private PostViewHolderClicks mListener;
-//
-//        public PostViewHolder(View itemView) {
-//            super(itemView);
-//            mPostImageView = (ImageView) itemView.findViewById(R.id.post_imageView);
-//            mTitleView = (TextView) itemView.findViewById(R.id.post_title);
-//            mDescriptionView = (TextView) itemView.findViewById(R.id.post_description);
-//            mCityView = (TextView) itemView.findViewById(R.id.post_city);
-//            mUsernameView = (TextView) itemView.findViewById(R.id.post_username);
-//            itemView.setOnClickListener(this);
-//        }
-//
-//        @Override
-//        public void onClick(View view) {
-//            Post post = mPosts.get(getPosition());
-//
-//            Log.i("ONCLICK","$$$ ONCLICK --> getPosition() $$$: "+(getPosition()));
-//            Log.i("ONCLICK","$$$ ONCLICK --> post.getTitle() $$$: "+(post.getTitle()));
-//            Log.i("ONCLICK","$$$ ONCLICK --> post.getDescription() $$$: "+(post.getDescription()));
-//            Log.i("BLINGKINGS","^^^ FLOSSY SON!&&&&");
-//        }
-//        public void setTitle(String title) {
-//            if (null == mTitleView) return;
-//            mTitleView.setText(title);
-//        }
-//
-//        public void setDescription(String description) {
-//            if (null == mDescriptionView) return;
-//            mDescriptionView.setText(description);
-//        }
-//
-//        public void setCity(String city) {
-//            if (null == mCityView) return;
-//            mCityView.setText(city);
-//        }
-//
-//        public void setUsername(String username) {
-//            if (null == mUsernameView) return;
-//            mUsernameView.setText(username);
-//        }
-//    }
 
     private String createUrl(){
         String url = BuildConfig.SERVER_URL + "/post/index/";

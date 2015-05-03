@@ -54,6 +54,12 @@
             android:layout_height="wrap_content"
             android:text="Use custom location for item"/>
 
+        <Button
+            android:id="@+id/customLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Custom location haterz!"/>
+
         <ImageView
             android:id="@+id/post_photo"
             android:layout_width="150dp"

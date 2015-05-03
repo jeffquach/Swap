@@ -50,17 +50,6 @@ public class GPSBackgroundService extends Service implements GoogleApiClient.Con
         }
     }
 
-//    @Override
-//    protected void onHandleIntent(Intent intent) {
-//        Log.e("SERVICE","$$$$ onHandleIntent called! $$$$$");
-//        onConnected(intent.getBundleExtra("nuff"));
-//        if(sharedPreferences.getBoolean("shouldCancel",false)){
-//            stopSelf();
-//            onDestroy();
-//            Log.e("SERVICE","$$$$ TINGZ BE CANCELLED YO! $$$$$");
-//        }
-//    }
-
     @Override
     public void onCreate() {
         Log.e("SERVICE","$$$$ onCreated called! $$$$$");
@@ -121,8 +110,6 @@ public class GPSBackgroundService extends Service implements GoogleApiClient.Con
     private void runUpdate(){
         sharedPreferences = getSharedPreferences("GPSBackgroundService",0);
         float displacementDistance = sharedPreferences.getFloat("desiredDistance",0f);
-        Log.e("SERVICE SON","$$$$$ displacementDistance $$$$$: "+displacementDistance);
-        Log.e("SERVICE SON","$$$$$ displacementDistance == 0f $$$$$: "+(displacementDistance == 0f));
         if (displacementDistance == 0f){
             displacementDistance = 0f;
         }

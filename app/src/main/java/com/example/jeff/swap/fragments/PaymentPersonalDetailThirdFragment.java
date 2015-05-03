@@ -202,7 +202,6 @@ public class PaymentPersonalDetailThirdFragment extends Fragment {
                     DialogFragment fragment = InformationDialogFragment.newInstance(errorMessage,"Error");
                     fragment.show(getActivity().getFragmentManager(), "error");
                 }else{
-//                    Toast.makeText(getActivity(), "Everything good to go yo!", Toast.LENGTH_LONG).show();
                     new SendPersonalInfo().execute();
                 }
             }
